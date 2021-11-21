@@ -7,11 +7,15 @@ public class Board {
 
 	ArrayList<collect> collects = new ArrayList<>();
 	Scanner sc = new Scanner(System.in);
-	int no = 1;
+	int no = 4;
+	
+	public Board() {
+		test_data();
+	}  //Board가 main class에서 new 하는 순간 실행이 된다.
 	
 	public void run_board() {
 		
-	
+	//test_data(); ==> test_data는 메인이 아닌 중요하지 않은 코드이므로 메인 코드 위에 사용하는 것은 적절하지 못 하다.
 		
 	while(true) {
 		
