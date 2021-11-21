@@ -3,6 +3,8 @@ package board;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import boardutil.My_util;
+
 public class Board {
 
 	ArrayList<collect> collects = new ArrayList<>();
@@ -60,13 +62,11 @@ public class Board {
 	} // --> run_board문
 	
 	private void test_data() {
-		//방법1
-		//collect a1 = new collect(1, "안녕하세요", "내용1입니다");
-		//collects.add(a1);
-		//방법2
-		collects.add(new collect(1, "안녕하세요", "내용1입니다"));
-		collects.add(new collect(2, "안녕하세요", "내용2입니다"));
-		collects.add(new collect(3, "안녕하세요", "내용3입니다"));
+		//Main class에 3개의 데이터가 추가 되었으므로 작성일, 작성자, 조회수 순으로 데이터를 추가햇 넣어 준다.
+		//My_util에서 getCurrnetDate(yyyy.MM.dd)의 형태로 오늘 날짜를 출력해 줘라
+		collects.add(new collect(1, "안녕하세요", "내용1입니다", My_util.getCurrentDate("yyyy.MM.dd"), "익명", 0));
+		collects.add(new collect(2, "안녕하세요", "내용2입니다", My_util.getCurrentDate("yyyy.MM.dd"), "익명", 0));
+		collects.add(new collect(3, "안녕하세요", "내용3입니다", My_util.getCurrentDate("yyyy.MM.dd"), "익명", 0));
 	}
 	
 	private void search() {
@@ -106,9 +106,12 @@ public class Board {
 		System.out.print("내용을 입력해 주세요 :");
 		String body = sc.nextLine();
 		
+		//괄호안의 형태로 오늘날의 날짜가 계산이 되어진다.
+		String currentDate = My_util.getCurrentDate("yyyy.MM.dd");
+		
 		
 		//collect라는 class에 만들어 놓은 생성자를 사용하기 위해??
-		collect make_collect = new collect(no, title, body);
+		collect make_collect = new collect(no, title, body, currentDate, "익명", 0);
 		collects.add(make_collect);
 		
 		System.out.println("게시물이 저장 되었습니다.");
@@ -133,7 +136,7 @@ public class Board {
 			String new_body = sc.nextLine();
 			
 			
-			collect make_collect = new collect(target_num, new_title, new_body);
+			collect make_collect = new collect(target_num, new_title, new_body, "2021-11-21", "익명", 0);
 			collects.set(target_real_num, make_collect);
 			
 			System.out.println("수정이 왼료 되었습니다.");
@@ -168,6 +171,10 @@ public class Board {
 			collect make_collect = list.get(i);  
 			System.out.println("번호 :" + make_collect.numbers);
 			System.out.println("제목 : " + make_collect.All_title);
+			//데이터가 추가가 되었으므로 출력할때 역시 추가하여 출력해주어야 한다.
+			System.out.println("작성자 : " + make_collect.writer);
+			System.out.println("등록날짜 : " + make_collect.regDate);
+			System.out.println("조회수 : " + make_collect.hit);
 			System.out.println("===========================");
 		}
 	}
