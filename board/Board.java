@@ -55,6 +55,16 @@ public class Board {
 	
 	} // --> run_board문
 	
+	private void test_data() {
+		//방법1
+		//collect a1 = new collect(1, "안녕하세요", "내용1입니다");
+		//collects.add(a1);
+		//방법2
+		collects.add(new collect(1, "안녕하세요", "내용1입니다"));
+		collects.add(new collect(2, "안녕하세요", "내용2입니다"));
+		collects.add(new collect(3, "안녕하세요", "내용3입니다"));
+	}
+	
 	private void search() {
 		System.out.print("검색 키워드를 입력해 주세요 : ");
 		String keyword = sc.nextLine();
