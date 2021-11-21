@@ -26,7 +26,7 @@ public class Board {
 		}
 		else if(cmd.equals("list")) {
 			
-			list();
+			list(collects);
 		}
 		else if(cmd.equals("update")) {
 			
@@ -36,7 +36,9 @@ public class Board {
 			
 			delete();
 		}
-		
+		else if(cmd.equals("search")){
+			search();
+		}
 		
 			
 			
@@ -52,6 +54,29 @@ public class Board {
 	
 	
 	} // --> run_board문
+	
+	private void search() {
+		System.out.print("검색 키워드를 입력해 주세요 : ");
+		String keyword = sc.nextLine();
+		
+		//검색된 것들만 모아서 출력해 주기 위해서는 그곳들만 모아줄 배열이 필요 하다.
+		ArrayList<collect> searched_all_keyword = new ArrayList<>();
+		
+		//무언가 찾아 출력하기 위해서는 반복문을 돌려 우선 찾게 시킨다.
+		for(int i = 0; i < collects.size(); i++) {   //contains API 사용법 이해하기!!
+			if(collects.get(i).All_title.contains(keyword)) {
+//<방법1>				
+//				System.out.println("번호 :" + collects.get(i).numbers);
+//				System.out.println("제목 : " + collects.get(i).All_title);
+//				System.out.println("==========================="); //이렇게도 사용 가능하지만 list외 겹치므로 더 좋은 코드를 만들어 준다
+				searched_all_keyword.add(collects.get(i));
+				
+			}	
+		}
+		list(searched_all_keyword);
+		
+		
+	}
 	
 	private void help() {
 		System.out.println("add  : 게시물 등록");
@@ -98,7 +123,7 @@ public class Board {
 			collects.set(target_real_num, make_collect);
 			
 			System.out.println("수정이 왼료 되었습니다.");
-			list();
+			list(collects);
 			
 		}
 	}
@@ -116,19 +141,19 @@ public class Board {
 			
 			
 			System.out.println("삭제가 완료 되었습니다.");
-			list();
+			list(collects); //list를 사용하기 위해서는 내가 보고 싶은 것을 매개변수로 넣어 주어야 한다.
 		}
 	}
 	
 	
 	
 	
-	public void list() {
-		for(int i = 0; i < collects.size(); i++) {
-			collect make_collect = collects.get(i);
+	public void list(ArrayList<collect> list) {  //list를 더 유동성 있게 사용하기 위해서 매개변수를 통해 사용할 수 있도록 한다
+		for(int i = 0; i < list.size(); i++) {
+			// == collect make_collect = collects.get(i);
+			collect make_collect = list.get(i);  
 			System.out.println("번호 :" + make_collect.numbers);
 			System.out.println("제목 : " + make_collect.All_title);
-			System.out.println("내용 : " + make_collect.All_body);
 			System.out.println("===========================");
 		}
 	}
