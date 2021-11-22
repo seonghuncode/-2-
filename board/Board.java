@@ -10,7 +10,8 @@ public class Board {
 	ArrayList<collect> collects = new ArrayList<>();
 	ArrayList<Member> members = new ArrayList<>();
 	Scanner sc = new Scanner(System.in);
-	int no = 4;
+	int collect_no = 4;  //no가 두개 생겼기 때문에 헷갈리지 않게 이름을 바꾸어 준다
+	int memberNo = 3;
 	Member loginedMember = null; //자바에서 검은색 글씨는 객체를 의미, 값을 넣어주지 않으면 null값이 자동으로 들어간다.
 	
 	public Board() {
@@ -36,7 +37,10 @@ public class Board {
 			help();
 		}
 		else if(cmd.equals("add")) {
-			add();
+			//add();
+			if(isLoginCheck() == true) {
+				add();
+			}
 		}
 		else if(cmd.equals("list")) {
 			
@@ -62,6 +66,12 @@ public class Board {
 		else if(cmd.equals("login")) {
 			login();
 		}
+		else if(cmd.equals("logout")) {
+			//logout(); -> 메서드를 사용하지 않고 초기 코드값을 사용했을 경우
+			if(isLoginCheck() == true) {
+				logout();
+			}
+		}
 			
 			
 			
@@ -76,6 +86,27 @@ public class Board {
 	
 	
 	} // --> run_board문
+	
+	private boolean isLoginCheck() {
+		if(loginedMember == null) {
+			System.out.println("로그인이 필요한 기능 입니다.");
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
+	private void logout() {
+		//if(loginedMember == null) {
+		//	System.out.println("로그인이 필요한 기능입니다.");
+		//	return;  //리턴을 만나는 즉시 메서드 종료, 호출한 쪽으로 다시 되돌아 간다.
+		//}   --> 이 기능이 중복으로 사용 되기 때문에 따로 메서드로 만들어 준다.
+		loginedMember = null;
+		System.out.println("로그인이 되었습니다.");
+	}
+	
+	
 	
 	private void login() {
 		System.out.print("아이디 :");
@@ -114,11 +145,12 @@ public class Board {
 		String nickname = sc.nextLine();
 		
 		//회원가입하는 멤버에 대한 새로운 class를 만들어 준다.
-		Member member = new Member(id, pw, nickname);
+		Member member = new Member(memberNo, id, pw, nickname);
 		//add를 해주기 위해 member만 모아두는 ArrayList를 만들어 준다.
 		members.add(member);
 		
 		System.out.println("==== 회원가입이 완료되었습니다. ====");
+		memberNo++;
 	}
 	
 	
@@ -142,9 +174,9 @@ public class Board {
 	    	          System.out.println("-------------------");
 	    	  		  System.out.println("내용 :" + collect_read.All_body);
 	          		  System.out.println("-------------------");
-		       		  System.out.println("작성자 :" + collect_read.writer);
+		       		  System.out.println("작성자 :" + collect_read.memberId); //현재 작성자가 숫자로 나온다.
 	          		  System.out.println("등록날짜:" + collect_read.regDate);
-	          		System.out.println("조회수 :" + collect_read.hit);
+	          		  System.out.println("조회수 :" + collect_read.hit);
 	          		  System.out.println("===================");
 	    	 
 	     }
@@ -155,9 +187,18 @@ public class Board {
 	private void test_data() {
 		//Main class에 3개의 데이터가 추가 되었으므로 작성일, 작성자, 조회수 순으로 데이터를 추가햇 넣어 준다.
 		//My_util에서 getCurrnetDate(yyyy.MM.dd)의 형태로 오늘 날짜를 출력해 줘라
-		collects.add(new collect(1, "안녕하세요", "내용1입니다", My_util.getCurrentDate("yyyy.MM.dd"), "익명", 0));
-		collects.add(new collect(2, "안녕하세요", "내용2입니다", My_util.getCurrentDate("yyyy.MM.dd"), "익명", 0));
-		collects.add(new collect(3, "안녕하세요", "내용3입니다", My_util.getCurrentDate("yyyy.MM.dd"), "익명", 0));
+		String currentDate = My_util.getCurrentDate("yyyy.MM.dd"); //같은 긴 코드가 중복되기 때문에 변수로 만들어 관리해준다.
+//		collects.add(new collect(1, "안녕하세요", "내용1입니다", currentDate, "홍길동", 0));
+//		collects.add(new collect(2, "안녕하세요", "내용2입니다", currentDate, "이순신", 0));
+//		collects.add(new collect(3, "안녕하세요", "내용3입니다", currentDate, "홍길동", 0));
+		//writer에서 memberId로 바뀌었으므로 몇번엔지 순번으로 적어준다.
+		collects.add(new collect(1, "안녕하세요", "내용1입니다", currentDate, 2, 0));
+		collects.add(new collect(2, "안녕하세요", "내용2입니다", currentDate, 1, 0));
+		collects.add(new collect(3, "안녕하세요", "내용3입니다", currentDate, 2, 0));
+		members.add(new Member(1, "lee123", "lee1234", "이순신"));
+		members.add(new Member(2, "hong123", "hong1234", "홍길동"));
+		
+		loginedMember = members.get(0);//테스트 데이터인데 일일이 로그인을 하기 번거롭기 때문에 로그인을 시켜 놓는다.
 	}
 	
 	private void search() {
@@ -202,11 +243,12 @@ public class Board {
 		
 		
 		//collect라는 class에 만들어 놓은 생성자를 사용하기 위해??
-		collect make_collect = new collect(no, title, body, currentDate, "익명", 0);
-		collects.add(make_collect);
+		collect make_collect = new collect(collect_no, title, body, currentDate, loginedMember.localId, 0);
+		collects.add(make_collect);    //이름이 같은 중복자가 있을경우 구별을 할 수 없으므로 loginedMemberid와 
+		//collet_no를 사용하여 구별을 해준다 이때 collect_no는 고유의 번호로 1씩 증가하면서 저장 되기에 중복이 될 수 없다
 		
 		System.out.println("게시물이 저장 되었습니다.");
-		no++;
+		collect_no++;
 	}
 	private void update() {
 		System.out.print("수정할 게시물 번호 :");
@@ -226,9 +268,9 @@ public class Board {
 			System.out.print("새내용 :");
 			String new_body = sc.nextLine();
 			
-			
-			collect make_collect = new collect(target_num, new_title, new_body, "2021-11-21", "익명", 0);
-			collects.set(target_real_num, make_collect);
+			//우선 보류
+			//collect make_collect = new collect(target_num, new_title, new_body, "2021-11-21", "익명", 0);
+			//collects.set(target_real_num, make_collect);
 			
 			System.out.println("수정이 왼료 되었습니다.");
 			list(collects);
@@ -263,7 +305,7 @@ public class Board {
 			System.out.println("번호 :" + make_collect.numbers);
 			System.out.println("제목 : " + make_collect.All_title);
 			//데이터가 추가가 되었으므로 출력할때 역시 추가하여 출력해주어야 한다.
-			System.out.println("작성자 : " + make_collect.writer);
+			System.out.println("작성자 : " + make_collect.memberId);
 			System.out.println("등록날짜 : " + make_collect.regDate);
 			System.out.println("조회수 : " + make_collect.hit);
 			System.out.println("===========================");

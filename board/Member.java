@@ -1,13 +1,15 @@
 package board;
 
 public class Member {
+	int localId;
 	String id;
 	String pw;
 	String nickname;
 	
 	//Alt + S + A 
-	public Member(String id, String pw, String nickname) {
+	public Member(int localId, String id, String pw, String nickname) {
 		super();
+		this.localId = localId;
 		this.id = id;
 		this.pw = pw;
 		this.nickname = nickname;
