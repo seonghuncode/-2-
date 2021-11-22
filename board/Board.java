@@ -8,6 +8,7 @@ import boardutil.My_util;
 public class Board {
 
 	ArrayList<collect> collects = new ArrayList<>();
+	ArrayList<Member> members = new ArrayList<>();
 	Scanner sc = new Scanner(System.in);
 	int no = 4;
 	
@@ -45,7 +46,12 @@ public class Board {
 		else if(cmd.equals("search")){
 			search();
 		}
-		
+		else if(cmd.equals("read")) {
+			read();  
+		}
+		else if(cmd.equals("signup")) {
+			signup();
+		}
 			
 			
 			
@@ -60,6 +66,57 @@ public class Board {
 	
 	
 	} // --> run_board문
+	
+	
+	private void signup() {
+		System.out.println("==== 회원 가입을 진행합니다 ====");
+		System.out.println("아이디를 입력해주세요 :");
+		String id = sc.nextLine();
+		
+		System.out.println("비밀번호를 입력해주세요 :");
+		String pw = sc.nextLine();
+		
+		System.out.println("닉네임을 입력해주세요 :");
+		String nickname = sc.nextLine();
+		
+		//회원가입하는 멤버에 대한 새로운 class를 만들어 준다.
+		Member member = new Member(id, pw, nickname);
+		//add를 해주기 위해 member만 모아두는 ArrayList를 만들어 준다.
+		members.add(member);
+		
+		System.out.println("==== 회원가입이 완료되었습니다. ====");
+	}
+	
+	
+	private void read() {
+	//list에서 내용을 보여주지 않기 때문에 상세 read를 하면 상세보기를 할 수 있는 기능이다.
+	     System.out.print("상세 보기 할 게시물 번호를 입력해 주세요 :");
+	     int target_num = Integer.parseInt(sc.nextLine());
+	     
+	     int target_real_num = check_list(target_num);
+	     
+	     if(target_real_num == -1) {
+	    	 System.out.println("없는 게시물 번호 입니다.");
+	     }
+	     else {
+	    	 collect collect_read = collects.get(target_real_num);  // -> 상세 보기할 진찌 번호
+	    	 collect_read.hit ++; //조회수를 1씩 증가 시켜준다.(상세 보기 할 때마다 증가??)
+	    	 
+	    	          System.out.println("====" + collect_read.numbers + "번 게시물 ====");
+	    	          System.out.println("번호 :" + collect_read.numbers);
+	    	          System.out.println("제목 :" + collect_read.All_title);
+	    	          System.out.println("-------------------");
+	    	  		  System.out.println("내용 :" + collect_read.All_body);
+	          		  System.out.println("-------------------");
+		       		  System.out.println("작성자 :" + collect_read.writer);
+	          		  System.out.println("등록날짜:" + collect_read.regDate);
+	          		System.out.println("조회수 :" + collect_read.hit);
+	          		  System.out.println("===================");
+	    	 
+	     }
+	     
+	     		
+	}
 	
 	private void test_data() {
 		//Main class에 3개의 데이터가 추가 되었으므로 작성일, 작성자, 조회수 순으로 데이터를 추가햇 넣어 준다.
