@@ -11,6 +11,7 @@ public class Board {
 	ArrayList<Member> members = new ArrayList<>();
 	Scanner sc = new Scanner(System.in);
 	int no = 4;
+	Member loginedMember = null; //자바에서 검은색 글씨는 객체를 의미, 값을 넣어주지 않으면 null값이 자동으로 들어간다.
 	
 	public Board() {
 		test_data();
@@ -22,7 +23,13 @@ public class Board {
 		
 	while(true) {
 		
-		System.out.print("명령어를 입력해 주세요 : ");
+		if(loginedMember == null) {
+			System.out.print("명령어를 입력해 주세요 :");
+		}
+		else {
+			System.out.println("명령어를 입력해주세요[" + loginedMember.id + "(" + loginedMember.nickname + ")] : ");
+		}
+		
 		String cmd = sc.nextLine();
 		
 		if(cmd.equals("help")) {
@@ -52,6 +59,9 @@ public class Board {
 		else if(cmd.equals("signup")) {
 			signup();
 		}
+		else if(cmd.equals("login")) {
+			login();
+		}
 			
 			
 			
@@ -67,13 +77,37 @@ public class Board {
 	
 	} // --> run_board문
 	
+	private void login() {
+		System.out.print("아이디 :");
+		String login_id = sc.nextLine();
+		
+		System.out.print("비밀번호 :");
+		String login_pw = sc.nextLine();
+		
+		boolean exist_login_id = false;
+		//존재 여부를 먼저 확인 해야 하기 때문에 반복문을 통해 존재하는 아이디,비밀번호 인지 찾아보개 시킨다.
+		for(int i = 0; i < members.size(); i++) {
+			Member member = members.get(i);
+			if(member.id.equals(login_id) && member.pw.equals(login_pw)) {
+				System.out.println(member.nickname + "님 환영 합니다.");
+				loginedMember = member; // ->로그인이 필요한 기능이 나올때 마다 로그인을 해야 하기 때문에 로그아웃을 하기전 까지 유지 되어야 한다.
+				exist_login_id = true;  //로그인이 유지 되기 위해서는 지역변수 보다 상위에 정보가 위치해 있어야 기억할 수 있다.
+				break; 				//메서드 위에 적어도 되지만 자바에서 변수들은 맨위에 모아서 관리하는게 편리하다.
+			}
+		}
+		//존재 하지 않는 아이디의 경우 반복문 밖에 코들를 만드는데 else를 사용할 경우 매번 코드가 실행 되기 땜누에 boolean값을 활용한다.
+		if(exist_login_id == false) {
+			System.out.println("비밀번호를 틀렸거나 잘못된 회원정보입니다.");
+		}
+	}
+	
 	
 	private void signup() {
 		System.out.println("==== 회원 가입을 진행합니다 ====");
-		System.out.println("아이디를 입력해주세요 :");
+		System.out.print("아이디를 입력해주세요 :");
 		String id = sc.nextLine();
 		
-		System.out.println("비밀번호를 입력해주세요 :");
+		System.out.print("비밀번호를 입력해주세요 :");
 		String pw = sc.nextLine();
 		
 		System.out.println("닉네임을 입력해주세요 :");
