@@ -2,14 +2,15 @@ package board;
 
 public class collect {
 
-	int numbers;
+	int numbers; 
 	String All_title;
 	String All_body; //묶고 싶은 정보를 적어준다
 	//=> 틀과 같은 개념 필요할때 마다 상자를 만들어 담는다. 
 	
 	//데이터가 늘어났다.(원하는 정보가 늘어 났으므로 우선 데이터를 늘려 준다.)
 	String regDate; // ==> 등록날자
-	int memberId;
+	int memberId;  //게시물을 작성한 회원을 구별하기 위한 용도
+	String nickname; //출력시 회원의 닉네임을 얻어와 저장하기 위한 용도
 	int hit; // == 조회수
 	
 	//생성자는 class로 부터 객체를 생성할때 필드값을 초기화 하는 작업을 해준다.

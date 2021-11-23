@@ -159,24 +159,25 @@ public class Board {
 	     System.out.print("상세 보기 할 게시물 번호를 입력해 주세요 :");
 	     int target_num = Integer.parseInt(sc.nextLine());
 	     
-	     int target_real_num = check_list(target_num);
+	     //int target_real_num = check_list(target_num);
+	     collect collect1 = getCollectByNo(target_num);
 	     
-	     if(target_real_num == -1) {
+	     if(collect1 == null) {
 	    	 System.out.println("없는 게시물 번호 입니다.");
 	     }
 	     else {
-	    	 collect collect_read = collects.get(target_real_num);  // -> 상세 보기할 진찌 번호
-	    	 collect_read.hit ++; //조회수를 1씩 증가 시켜준다.(상세 보기 할 때마다 증가??)
+	    	
+	    	 collect1.hit ++; //조회수를 1씩 증가 시켜준다.(상세 보기 할 때마다 증가??)
 	    	 
-	    	          System.out.println("====" + collect_read.numbers + "번 게시물 ====");
-	    	          System.out.println("번호 :" + collect_read.numbers);
-	    	          System.out.println("제목 :" + collect_read.All_title);
+	    	          System.out.println("====" + collect1.numbers + "번 게시물 ====");
+	    	          System.out.println("번호 :" + collect1.numbers);
+	    	          System.out.println("제목 :" + collect1.All_title);
 	    	          System.out.println("-------------------");
-	    	  		  System.out.println("내용 :" + collect_read.All_body);
+	    	  		  System.out.println("내용 :" + collect1.All_body);
 	          		  System.out.println("-------------------");
-		       		  System.out.println("작성자 :" + collect_read.memberId); //현재 작성자가 숫자로 나온다.
-	          		  System.out.println("등록날짜:" + collect_read.regDate);
-	          		  System.out.println("조회수 :" + collect_read.hit);
+		       		  System.out.println("작성자 :" + collect1.nickname); 
+	          		  System.out.println("등록날짜:" + collect1.regDate);
+	          		  System.out.println("조회수 :" + collect1.hit);
 	          		  System.out.println("===================");
 	    	 
 	     }
@@ -255,9 +256,9 @@ public class Board {
 		int target_num = Integer.parseInt(sc.nextLine());
 		
 
-		int target_real_num = check_list(target_num);
+		collect collect1 = getCollectByNo(target_num);
 		
-		if(target_real_num == -1) {
+		if(collect1 == null) {
 			System.out.println("없는 게시물 번호 입니다.");
 		}
 		else {
@@ -268,9 +269,8 @@ public class Board {
 			System.out.print("새내용 :");
 			String new_body = sc.nextLine();
 			
-			//우선 보류
-			//collect make_collect = new collect(target_num, new_title, new_body, "2021-11-21", "익명", 0);
-			//collects.set(target_real_num, make_collect);
+			collect1.All_title = new_title;
+			collect1.All_body = new_body;
 			
 			System.out.println("수정이 왼료 되었습니다.");
 			list(collects);
@@ -281,13 +281,13 @@ public class Board {
 		System.out.print("삭제할 게시물 번호 : ");
 		int target_num = Integer.parseInt(sc.nextLine());
 		
-		int target_real_num = check_list(target_num);
+		collect collect1 = getCollectByNo(target_num);
 		
-		if(target_real_num == -1) {
+		if(collect1 == null) {
 			System.out.println("없는 게시물 번호 입니다.");
 		}
 		else {
-			collects.remove(target_real_num);
+			collects.remove(collect1);
 			
 			
 			System.out.println("삭제가 완료 되었습니다.");
@@ -302,27 +302,66 @@ public class Board {
 		for(int i = 0; i < list.size(); i++) {
 			// == collect make_collect = collects.get(i);
 			collect make_collect = list.get(i);  
+			
+			make_collect = setCollectNickname(make_collect);//모든 게시물의 닉네임을 작성자에게 맞게 세팅
+			
 			System.out.println("번호 :" + make_collect.numbers);
 			System.out.println("제목 : " + make_collect.All_title);
 			//데이터가 추가가 되었으므로 출력할때 역시 추가하여 출력해주어야 한다.
-			System.out.println("작성자 : " + make_collect.memberId);
+			System.out.println("작성자 : " + make_collect.nickname);
 			System.out.println("등록날짜 : " + make_collect.regDate);
 			System.out.println("조회수 : " + make_collect.hit);
 			System.out.println("===========================");
 		}
 	}
 	
-	public int check_list(int target_num) {
+	
+	//게시물 데이터를 찾을때 index가 아닌 게시물 데이터 그 자체를 찾는 것으로 변경	
+	//회원이름을 게시물에 적용시켜 조립된 상태로 얻기 위함
+	public collect getCollectByNo(int target_num) {
 		
+		collect targetCollect = null;
+		//찾고자 하는 게시물 찾기
 		for(int i = 0; i < collects.size(); i++) {
 		
 			collect exist_num = collects.get(i);
 			if(target_num == exist_num.numbers) {
-				return i;
+				targetCollect = exist_num;
+				break;
 			}
 	}
-		return -1;
-}		
+		//닉네임을 세팅하고
+		targetCollect = setCollectNickname(targetCollect);
+		//반환
+		return targetCollect;
+	}	
+	
+	//게시물을 받아 해당 게시물의 작성자 번호에 맞는 작성자 닉네임을 세팅해 주는 메서드
+	private collect setCollectNickname(collect collect1) {
+		
+		//null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null그대로 반환
+		if(collect1 != null) {
+			Member member = getMemberByMemberNo(collect1.memberId);
+			collect1.nickname = member.nickname;
+		}
+		return collect1;
+	}
+	
+	
+	//게시물 찾기와 마찬가지로 역시 회원 저보 그 자체를 찾은 것으로 변경
+	private Member getMemberByMemberNo(int memberId) {
+		
+		Member targetMember = null;
+		
+		for(int i = 0; i < members.size(); i++) {
+			Member currentMember = members.get(i);
+			if(memberId == currentMember.localId) {
+				targetMember = currentMember;
+				break;
+			}
+		}
+		return targetMember;
+	}
 	
 	
 } // --> Board class
