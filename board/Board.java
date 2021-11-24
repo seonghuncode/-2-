@@ -103,7 +103,7 @@ public class Board {
 		//	return;  //리턴을 만나는 즉시 메서드 종료, 호출한 쪽으로 다시 되돌아 간다.
 		//}   --> 이 기능이 중복으로 사용 되기 때문에 따로 메서드로 만들어 준다.
 		loginedMember = null;
-		System.out.println("로그인이 되었습니다.");
+		System.out.println("로그아웃 되었습니다.");
 	}
 	
 	
@@ -180,10 +180,45 @@ public class Board {
 	          		  System.out.println("조회수 :" + collect1.hit);
 	          		  System.out.println("===================");
 	    	 
+	          		  readProcess();
+	          		  
+	          		  
+	          		  
+	          		  
+	          		  
 	     }
 	     
 	     		
 	}
+	
+	private void readProcess() {
+		//상세 보기 메뉴 추가
+		while(true) { //반복문에 기능들을 넣는 이유는 원할때 까지 기능을 사용하도록 하기 위해서 이다.
+		
+		System.out.println("상세보기 기능을 선택해주세요(1. 댓글 등록, 2. 좋아요, 3. 수정, 4. 삭제, 5. 목록으로) : ");
+		  int readCmd = Integer.parseInt(sc.nextLine());
+		  
+		  if(readCmd == 1) {
+			  System.out.println("[댓글 기능]");
+		  }
+		  else if(readCmd == 2) {
+			  System.out.println("[좋아요 기능]");
+		  }
+		  else if(readCmd == 3) {
+			  System.out.println("[수정 기능]");
+		  }
+		  else if(readCmd == 4) {
+			  System.out.println("[삭제기능]");
+		  }
+		  else if(readCmd == 5) {
+			  System.out.println("[목록 으로]");
+			  break;
+		  }
+		}
+		  
+	}
+	
+	
 	
 	private void test_data() {
 		//Main class에 3개의 데이터가 추가 되었으므로 작성일, 작성자, 조회수 순으로 데이터를 추가햇 넣어 준다.
