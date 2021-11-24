@@ -5,8 +5,10 @@ public class Reply {
 	// == 개념을 하나 표현한 것이다.
 	
 	int id; //식별 데이터
+	int parentId; //부모글 번호 (각 댓글이 몇번 게시물의 댓글인지 구분하기 위해서)
 	String body; //댓글 내용
 	int memberId; // 댓글 작성자
+	String nickname;
 	String regDate; //작성일
 	
 
@@ -14,13 +16,14 @@ public class Reply {
 	//이유 : collect는 하나인데 collect에 해당하는 댓글은 여러개 이다 
 	//결론 : 댓글들을 따로 모아 하나에 저장한 후에 그것을 collect와 연결 시켜준다.(ex.회원 같은 경우는 memberId로 연결해 주었다.)
 	
-	public Reply(int id, String body, int memberId, String regDate) {
+	public Reply(int id, int parentId, String body, int memberId, String regDate) {
 		super();
 		this.id = id;
+		this.parentId = parentId;
 		this.body = body;
 		this.memberId = memberId;
 		this.regDate = regDate;
 	}
-	
+	//위의 생성자 코드는 reply를 만들때 셋팅을 할 수 있게 해주는 코드??!!
 	
 }

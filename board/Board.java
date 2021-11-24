@@ -7,6 +7,8 @@ import boardutil.My_util;
 
 public class Board {
 
+	//기존의 댓글 기능에서 댓글을 달고 댓글을 보여주는 기능 구현
+	
 	ArrayList<collect> collects = new ArrayList<>();
 	ArrayList<Member> members = new ArrayList<>();
 	ArrayList<Reply> replies = new ArrayList<>(); //reply를 저장하는 저장소
@@ -172,18 +174,10 @@ public class Board {
 	    	
 	    	 collect1.hit ++; //조회수를 1씩 증가 시켜준다.(상세 보기 할 때마다 증가??)
 	    	 
-	    	          System.out.println("====" + collect1.numbers + "번 게시물 ====");
-	    	          System.out.println("번호 :" + collect1.numbers);
-	    	          System.out.println("제목 :" + collect1.All_title);
-	    	          System.out.println("-------------------");
-	    	  		  System.out.println("내용 :" + collect1.All_body);
-	          		  System.out.println("-------------------");
-		       		  System.out.println("작성자 :" + collect1.nickname); 
-	          		  System.out.println("등록날짜:" + collect1.regDate);
-	          		  System.out.println("조회수 :" + collect1.hit);
-	          		  System.out.println("===================");
+	    	          //같은 데이터가 다른곳에도 필요로 하기 때문에 따로 만들어 사용한다(중복 최소화)
+	    	 		  printCollect(collect1);//collect1이 필요하니까 넘겨준다
 	    	 
-	          		  readProcess();
+	          		  readProcess(collect1);
 	          		  
 	          		  
 	          		  
@@ -194,7 +188,53 @@ public class Board {
 	     		
 	}
 	
-	private void readProcess() {
+	private void printCollect(collect collect1) {
+		  System.out.println("====" + collect1.numbers + "번 게시물 ====");
+          System.out.println("번호 :" + collect1.numbers);
+          System.out.println("제목 :" + collect1.All_title);
+          System.out.println("-------------------");
+		  System.out.println("내용 :" + collect1.All_body);
+		  System.out.println("-------------------");
+ 		  System.out.println("작성자 :" + collect1.nickname); 
+		  System.out.println("등록날짜:" + collect1.regDate);
+		  System.out.println("조회수 :" + collect1.hit);
+		  System.out.println("===================");
+		  System.out.println("======= 댓글 =======");
+		  //댓글을 보여주기 위해 어디 있는지 찾아야 한다
+		  for(int i = 0; i < replies.size(); i++) {
+			  
+			  Reply currentReply = replies.get(i);
+			  //collect와 같은 역할을 하게 만든다??(방금 전 코드의)
+			  
+			  //상세보기 할때 다 출력 하는 것이 아니라 댓글 번호라 상세보기 게시물 번호가 같으면 출력해라
+			  if(currentReply.parentId == collect1.numbers) {
+				  
+				  currentReply = setReplyNickname(currentReply);
+				  //setReplyNickname을 거쳐서 오면 닉네임이 셋팅이 되어 나온다
+				  System.out.println("내용 :" + currentReply.body);
+				  System.out.println("작성자 :" + currentReply.nickname); //memberId인데 memberId로 적으면 안되기 때문에
+				  System.out.println("작성일 :" + currentReply.regDate); //reply class에 nickname을 하나 더 만들어 준다.
+				  System.out.println("==================");
+			  }
+			  
+		  }
+		  
+	}
+	
+	private Reply setReplyNickname(Reply reply) {
+		
+		//null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null 그대로 반환
+		if(reply != null) {
+			Member member = getMemberByMemberNo(reply.memberId);
+			reply.nickname = member.nickname;
+		}
+		
+		return reply;
+	}
+	
+	
+	
+	private void readProcess(collect collect1) {
 		//상세 보기 메뉴 추가
 		while(true) { //반복문에 기능들을 넣는 이유는 원할때 까지 기능을 사용하도록 하기 위해서 이다.
 		
@@ -203,7 +243,7 @@ public class Board {
 		  
 		  if(readCmd == 1) {
 			  System.out.println("[댓글 기능]");
-			  reply();
+			  reply(collect1);
 		  }
 		  else if(readCmd == 2) {
 			  System.out.println("[좋아요 기능]");
@@ -222,19 +262,25 @@ public class Board {
 		  
 	}
 	
-	private void reply() {
+	private void reply(collect collect1) {
+		//상세보기할 게시물
 		 System.out.print("댓글 내용을 입력해 주세요 :");
 
 		 String rbody = sc.nextLine();
 		 int memberId = loginedMember.localId; // == memberId구하는 방법
 		 String regDate = My_util.getCurrentDate(dateFormat);
 		 
-		 Reply reply = new Reply(replyNo, rbody, memberId, regDate);//Reply틀에 reply라는 인스턴스를 만들어서
+		 //read하면 상세보기 하겠다는 이야기 이므로 이때 찾은 상세보기 게시물이 번호기 때문에 collect1.numbers를 작성해 준다.
+		 Reply reply = new Reply(replyNo,collect1.numbers, rbody, memberId, regDate);//Reply틀에 reply라는 인스턴스를 만들어서
 		 replies.add(reply);			// -> ()안에 원하는 저장 값을 넣어 저장 후  만들어 놓은 배열에 reply를 통체로 저장
 		 
 		System.out.println("댓글이 등록 되었습니다."); 
 		
-		  
+		//상세보기 다시 보여 주기.(read에 있다)
+		printCollect(collect1); //collect1이 없기 때문에 
+		// -> reply를 호출하고 있는 것 == readProcess(여기도 게시물 번호가 없다) -> readProcess를 호출한 것(read) 여기서
+		//collect1 정보가 필요 하기 때문에 read메서드에 readProcess에 collect1을 넣어준다 -> readProcess에서 collect collect1으로
+		//바로 받아준다 -> reply(collect1) -> 현 reply메서드 에서도 collect collect1으로 받아준다.
 		  
 	}
 	
