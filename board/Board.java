@@ -9,9 +9,12 @@ public class Board {
 
 	ArrayList<collect> collects = new ArrayList<>();
 	ArrayList<Member> members = new ArrayList<>();
+	ArrayList<Reply> replies = new ArrayList<>(); //reply를 저장하는 저장소
 	Scanner sc = new Scanner(System.in);
+	String dateFormat = "yyyy.MM.dd"; // 항상 직접 적어주어야 하기에 변수에 넣어 사용한다.
 	int collect_no = 4;  //no가 두개 생겼기 때문에 헷갈리지 않게 이름을 바꾸어 준다
 	int memberNo = 3;
+	int replyNo = 1; // collect넘버에서 memberNo처럼 만들어 준다.
 	Member loginedMember = null; //자바에서 검은색 글씨는 객체를 의미, 값을 넣어주지 않으면 null값이 자동으로 들어간다.
 	
 	public Board() {
@@ -200,6 +203,7 @@ public class Board {
 		  
 		  if(readCmd == 1) {
 			  System.out.println("[댓글 기능]");
+			  reply();
 		  }
 		  else if(readCmd == 2) {
 			  System.out.println("[좋아요 기능]");
@@ -218,12 +222,28 @@ public class Board {
 		  
 	}
 	
+	private void reply() {
+		 System.out.print("댓글 내용을 입력해 주세요 :");
+
+		 String rbody = sc.nextLine();
+		 int memberId = loginedMember.localId; // == memberId구하는 방법
+		 String regDate = My_util.getCurrentDate(dateFormat);
+		 
+		 Reply reply = new Reply(replyNo, rbody, memberId, regDate);//Reply틀에 reply라는 인스턴스를 만들어서
+		 replies.add(reply);			// -> ()안에 원하는 저장 값을 넣어 저장 후  만들어 놓은 배열에 reply를 통체로 저장
+		 
+		System.out.println("댓글이 등록 되었습니다."); 
+		
+		  
+		  
+	}
+	
 	
 	
 	private void test_data() {
 		//Main class에 3개의 데이터가 추가 되었으므로 작성일, 작성자, 조회수 순으로 데이터를 추가햇 넣어 준다.
 		//My_util에서 getCurrnetDate(yyyy.MM.dd)의 형태로 오늘 날짜를 출력해 줘라
-		String currentDate = My_util.getCurrentDate("yyyy.MM.dd"); //같은 긴 코드가 중복되기 때문에 변수로 만들어 관리해준다.
+		String currentDate = My_util.getCurrentDate(dateFormat); //같은 긴 코드가 중복되기 때문에 변수로 만들어 관리해준다.
 //		collects.add(new collect(1, "안녕하세요", "내용1입니다", currentDate, "홍길동", 0));
 //		collects.add(new collect(2, "안녕하세요", "내용2입니다", currentDate, "이순신", 0));
 //		collects.add(new collect(3, "안녕하세요", "내용3입니다", currentDate, "홍길동", 0));
@@ -275,7 +295,7 @@ public class Board {
 		String body = sc.nextLine();
 		
 		//괄호안의 형태로 오늘날의 날짜가 계산이 되어진다.
-		String currentDate = My_util.getCurrentDate("yyyy.MM.dd");
+		String currentDate = My_util.getCurrentDate(dateFormat);
 		
 		
 		//collect라는 class에 만들어 놓은 생성자를 사용하기 위해??
