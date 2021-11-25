@@ -1,6 +1,6 @@
 package board;
 
-public class BaseInfo {
+public class BaseCollect {
 	//collect와 reply의 공통점을 뽑아낸다.
 	int id;
 	String body;

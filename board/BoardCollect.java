@@ -1,6 +1,6 @@
 package board;
 
-public class collect extends BaseInfo {
+public class BoardCollect extends BaseCollect {
 
 	
 	String All_title;
@@ -16,7 +16,7 @@ public class collect extends BaseInfo {
 	//필드와 동일한 매개변수 사용가능, 이때 this는 필드와 매개변수를 명확히 구분하는 역할(this는 class안에서만 사용 가능)
 
 	//Alt + s + a ==> 단축키
-	public collect(int id, String All_title, String body, String regDate, int memberId, int hit) {
+	public BoardCollect(int id, String All_title, String body, String regDate, int memberId, int hit) {
 		super();
 		this.id = id;
 		this.All_title = All_title;

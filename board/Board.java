@@ -6,17 +6,26 @@ import java.util.Scanner;
 import boardutil.My_util;
 
 public class Board {
-
+	//이름을 변경하는 이유 -> 이름짓는것과(class,변수)이름을 잘 짓도록 신경쓰기
+	//나중에 또다른것이 나오면 현재의 것을 바탕으로 만들수 있기 때문에 
+	
+	//BoadColect > BaseCollect > 데이터
+	//무엇을 시키면 자신의 데이터에서 먼자 찾아보고 없으면 상속관계의 데이터에서 찾아본다
+	
+	//리펙토링을 하면서 Collect -> BoardCollect로 변경(일일히 안하고 한번에 하는 방법 == 커서를 맨위에두고 ctrl + f)
+	//=> find부분에 collct, replace부분에 BoardCollect로 하면 한번에 변경 가능하다.
+	//replace all해도 되지만 안전하게 find후 replace/find로 확인하면서 변경해주면 좋다.
 	
 	
-	ArrayList<collect> collects = new ArrayList<>();
+	//변수명은 소문자로 시작한다(개발자간 약속??)
+	ArrayList<BoardCollect> boardCollects = new ArrayList<>();
 	ArrayList<Member> members = new ArrayList<>();
-	ArrayList<Reply> replies = new ArrayList<>(); //reply를 저장하는 저장소
+	ArrayList<ReplyCollect> replies = new ArrayList<>(); //REplyCollect를 저장하는 저장소
 	Scanner sc = new Scanner(System.in);
 	String dateFormat = "yyyy.MM.dd"; // 항상 직접 적어주어야 하기에 변수에 넣어 사용한다.
-	int collect_no = 4;  //no가 두개 생겼기 때문에 헷갈리지 않게 이름을 바꾸어 준다
+	int boardCollect_no = 4;  //no가 두개 생겼기 때문에 헷갈리지 않게 이름을 바꾸어 준다
 	int memberNo = 3;
-	int replyNo = 1; // collect넘버에서 memberNo처럼 만들어 준다.
+	int replyCollectNo = 1; // BoardCollect넘버에서 memberNo처럼 만들어 준다.
 	Member loginedMember = null; //자바에서 검은색 글씨는 객체를 의미, 값을 넣어주지 않으면 null값이 자동으로 들어간다.
 	
 	public Board() {
@@ -49,7 +58,7 @@ public class Board {
 		}
 		else if(cmd.equals("list")) {
 			
-			list(collects);
+			list(boardCollects);
 		}
 		else if(cmd.equals("update")) {
 			
@@ -165,19 +174,19 @@ public class Board {
 	     int target_num = Integer.parseInt(sc.nextLine());
 	     
 	     //int target_real_num = check_list(target_num);
-	     collect collect1 = getCollectByNo(target_num);
+	     BoardCollect BoardCollect1 = getBoardCollectByNo(target_num);
 	     
-	     if(collect1 == null) {
+	     if(BoardCollect1 == null) {
 	    	 System.out.println("없는 게시물 번호 입니다.");
 	     }
 	     else {
 	    	
-	    	 collect1.hit ++; //조회수를 1씩 증가 시켜준다.(상세 보기 할 때마다 증가??)
+	    	 BoardCollect1.hit ++; //조회수를 1씩 증가 시켜준다.(상세 보기 할 때마다 증가??)
 	    	 
 	    	          //같은 데이터가 다른곳에도 필요로 하기 때문에 따로 만들어 사용한다(중복 최소화)
-	    	 		  printCollect(collect1);//collect1이 필요하니까 넘겨준다
+	    	 		  printBoardCollect(BoardCollect1);//BoardCollect1이 필요하니까 넘겨준다
 	    	 
-	          		  readProcess(collect1);
+	          		  readProcess(BoardCollect1);
 	          		  
 	          		  
 	          		  
@@ -188,35 +197,35 @@ public class Board {
 	     		
 	}
 	
-	private void printCollect(collect collect1) {
-		  System.out.println("====" + collect1.id + "번 게시물 ====");
-          System.out.println("번호 :" + collect1.id);
-          System.out.println("제목 :" + collect1.All_title);
+	private void printBoardCollect(BoardCollect BoardCollect1) {
+		  System.out.println("====" + BoardCollect1.id + "번 게시물 ====");
+          System.out.println("번호 :" + BoardCollect1.id);
+          System.out.println("제목 :" + BoardCollect1.All_title);
           System.out.println("-------------------");
-		  System.out.println("내용 :" + collect1.body);
+		  System.out.println("내용 :" + BoardCollect1.body);
 		  System.out.println("-------------------");
- 		  System.out.println("작성자 :" + collect1.nickname); 
-		  System.out.println("등록날짜:" + collect1.regDate);
-		  System.out.println("조회수 :" + collect1.hit);
+ 		  System.out.println("작성자 :" + BoardCollect1.nickname); 
+		  System.out.println("등록날짜:" + BoardCollect1.regDate);
+		  System.out.println("조회수 :" + BoardCollect1.hit);
 		  System.out.println("===================");
 		  System.out.println("======= 댓글 =======");
 		  //댓글을 보여주기 위해 어디 있는지 찾아야 한다
 		  for(int i = 0; i < replies.size(); i++) {
 			  
-			  Reply currentReply = replies.get(i);
-			  //collect와 같은 역할을 하게 만든다??(방금 전 코드의)
+			  ReplyCollect currentReplyCollect = replies.get(i);
+			  //BoardCollect와 같은 역할을 하게 만든다??(방금 전 코드의)
 			  
-			 BaseInfo info = currentReply;
+			 BaseCollect info = currentReplyCollect;
 			 
-			 if(currentReply.parentId == collect1.id) {
-				 //바로 넣을 수 없기 때문에 (Reply)를 적어 형변환을 시켜준다.
-				currentReply = (Reply)setNickname(currentReply); 
-			 
+			 if(currentReplyCollect.parentId == BoardCollect1.id) {
+				 //바로 넣을 수 없기 때문에 (REplyCollect)를 적어 형변환을 시켜준다.
+				currentReplyCollect = (ReplyCollect)setNickname(currentReplyCollect); 
+			 //replyCollect는 boarcollect에 들어 올수 없다 > 형이 안맞기 때문에
 			  
-				  //setReplyNickname을 거쳐서 오면 닉네임이 셋팅이 되어 나온다
-				  System.out.println("내용 :" + currentReply.body);
-				  System.out.println("작성자 :" + currentReply.nickname); //memberId인데 memberId로 적으면 안되기 때문에
-				  System.out.println("작성일 :" + currentReply.regDate); //reply class에 nickname을 하나 더 만들어 준다.
+				  //setREplyCollectNickname을 거쳐서 오면 닉네임이 셋팅이 되어 나온다
+				  System.out.println("내용 :" + currentReplyCollect.body);
+				  System.out.println("작성자 :" + currentReplyCollect.nickname); //memberId인데 memberId로 적으면 안되기 때문에
+				  System.out.println("작성일 :" + currentReplyCollect.regDate); //REplyCollect class에 nickname을 하나 더 만들어 준다.
 				  System.out.println("==================");
 			  }
 			  
@@ -228,7 +237,7 @@ public class Board {
 	
 	
 	
-	private void readProcess(collect collect1) {
+	private void readProcess(BoardCollect BoardCollect1) {
 		//상세 보기 메뉴 추가
 		while(true) { //반복문에 기능들을 넣는 이유는 원할때 까지 기능을 사용하도록 하기 위해서 이다.
 		
@@ -237,7 +246,7 @@ public class Board {
 		  
 		  if(readCmd == 1) {
 			  System.out.println("[댓글 기능]");
-			  reply(collect1);
+			  REplyCollect(BoardCollect1);
 		  }
 		  else if(readCmd == 2) {
 			  System.out.println("[좋아요 기능]");
@@ -256,7 +265,7 @@ public class Board {
 		  
 	}
 	
-	private void reply(collect collect1) {
+	private void REplyCollect(BoardCollect BoardCollect1) {
 		//상세보기할 게시물
 		 System.out.print("댓글 내용을 입력해 주세요 :");
 
@@ -264,17 +273,17 @@ public class Board {
 		 int memberId = loginedMember.localId; // == memberId구하는 방법
 		 String regDate = My_util.getCurrentDate(dateFormat);
 		 
-		 //read하면 상세보기 하겠다는 이야기 이므로 이때 찾은 상세보기 게시물이 번호기 때문에 collect1.numbers를 작성해 준다.
-		 Reply reply = new Reply(replyNo,collect1.id, rbody, memberId, regDate);//Reply틀에 reply라는 인스턴스를 만들어서
-		 replies.add(reply);			// -> ()안에 원하는 저장 값을 넣어 저장 후  만들어 놓은 배열에 reply를 통체로 저장
+		 //read하면 상세보기 하겠다는 이야기 이므로 이때 찾은 상세보기 게시물이 번호기 때문에 BoardCollect1.numbers를 작성해 준다.
+		 ReplyCollect ReplyCollect = new ReplyCollect(replyCollectNo,BoardCollect1.id, rbody, memberId, regDate);//REplyCollect틀에 REplyCollect라는 인스턴스를 만들어서
+		 replies.add(ReplyCollect);			// -> ()안에 원하는 저장 값을 넣어 저장 후  만들어 놓은 배열에 REplyCollect를 통체로 저장
 		 
 		System.out.println("댓글이 등록 되었습니다."); 
 		
 		//상세보기 다시 보여 주기.(read에 있다)
-		printCollect(collect1); //collect1이 없기 때문에 
-		// -> reply를 호출하고 있는 것 == readProcess(여기도 게시물 번호가 없다) -> readProcess를 호출한 것(read) 여기서
-		//collect1 정보가 필요 하기 때문에 read메서드에 readProcess에 collect1을 넣어준다 -> readProcess에서 collect collect1으로
-		//바로 받아준다 -> reply(collect1) -> 현 reply메서드 에서도 collect collect1으로 받아준다.
+		printBoardCollect(BoardCollect1); //BoardCollect1이 없기 때문에 
+		// -> REplyCollect를 호출하고 있는 것 == readProcess(여기도 게시물 번호가 없다) -> readProcess를 호출한 것(read) 여기서
+		//BoardCollect1 정보가 필요 하기 때문에 read메서드에 readProcess에 BoardCollect1을 넣어준다 -> readProcess에서 BoardCollect BoardCollect1으로
+		//바로 받아준다 -> REplyCollect(BoardCollect1) -> 현 REplyCollect메서드 에서도 BoardCollect BoardCollect1으로 받아준다.
 		  
 	}
 	
@@ -284,13 +293,13 @@ public class Board {
 		//Main class에 3개의 데이터가 추가 되었으므로 작성일, 작성자, 조회수 순으로 데이터를 추가햇 넣어 준다.
 		//My_util에서 getCurrnetDate(yyyy.MM.dd)의 형태로 오늘 날짜를 출력해 줘라
 		String currentDate = My_util.getCurrentDate(dateFormat); //같은 긴 코드가 중복되기 때문에 변수로 만들어 관리해준다.
-//		collects.add(new collect(1, "안녕하세요", "내용1입니다", currentDate, "홍길동", 0));
-//		collects.add(new collect(2, "안녕하세요", "내용2입니다", currentDate, "이순신", 0));
-//		collects.add(new collect(3, "안녕하세요", "내용3입니다", currentDate, "홍길동", 0));
+//		BoardCollects.add(new BoardCollect(1, "안녕하세요", "내용1입니다", currentDate, "홍길동", 0));
+//		BoardCollects.add(new BoardCollect(2, "안녕하세요", "내용2입니다", currentDate, "이순신", 0));
+//		BoardCollects.add(new BoardCollect(3, "안녕하세요", "내용3입니다", currentDate, "홍길동", 0));
 		//writer에서 memberId로 바뀌었으므로 몇번엔지 순번으로 적어준다.
-		collects.add(new collect(1, "안녕하세요", "내용1입니다", currentDate, 2, 0));
-		collects.add(new collect(2, "안녕하세요", "내용2입니다", currentDate, 1, 0));
-		collects.add(new collect(3, "안녕하세요", "내용3입니다", currentDate, 2, 0));
+		boardCollects.add(new BoardCollect(1, "안녕하세요", "내용1입니다", currentDate, 2, 0));
+		boardCollects.add(new BoardCollect(2, "안녕하세요", "내용2입니다", currentDate, 1, 0));
+		boardCollects.add(new BoardCollect(3, "안녕하세요", "내용3입니다", currentDate, 2, 0));
 		members.add(new Member(1, "lee123", "lee1234", "이순신"));
 		members.add(new Member(2, "hong123", "hong1234", "홍길동"));
 		
@@ -302,16 +311,16 @@ public class Board {
 		String keyword = sc.nextLine();
 		
 		//검색된 것들만 모아서 출력해 주기 위해서는 그곳들만 모아줄 배열이 필요 하다.
-		ArrayList<collect> searched_all_keyword = new ArrayList<>();
+		ArrayList<BoardCollect> searched_all_keyword = new ArrayList<>();
 		
 		//무언가 찾아 출력하기 위해서는 반복문을 돌려 우선 찾게 시킨다.
-		for(int i = 0; i < collects.size(); i++) {   //contains API 사용법 이해하기!!
-			if(collects.get(i).All_title.contains(keyword)) {
+		for(int i = 0; i < boardCollects.size(); i++) {   //contains API 사용법 이해하기!!
+			if(boardCollects.get(i).All_title.contains(keyword)) {
 //<방법1>				
-//				System.out.println("번호 :" + collects.get(i).numbers);
-//				System.out.println("제목 : " + collects.get(i).All_title);
+//				System.out.println("번호 :" + BoardCollects.get(i).numbers);
+//				System.out.println("제목 : " + BoardCollects.get(i).All_title);
 //				System.out.println("==========================="); //이렇게도 사용 가능하지만 list외 겹치므로 더 좋은 코드를 만들어 준다
-				searched_all_keyword.add(collects.get(i));
+				searched_all_keyword.add(boardCollects.get(i));
 				
 			}	
 		}
@@ -338,22 +347,22 @@ public class Board {
 		String currentDate = My_util.getCurrentDate(dateFormat);
 		
 		
-		//collect라는 class에 만들어 놓은 생성자를 사용하기 위해??
-		collect make_collect = new collect(collect_no, title, body, currentDate, loginedMember.localId, 0);
-		collects.add(make_collect);    //이름이 같은 중복자가 있을경우 구별을 할 수 없으므로 loginedMemberid와 
-		//collet_no를 사용하여 구별을 해준다 이때 collect_no는 고유의 번호로 1씩 증가하면서 저장 되기에 중복이 될 수 없다
+		//BoardCollect라는 class에 만들어 놓은 생성자를 사용하기 위해??
+		BoardCollect make_BoardCollect = new BoardCollect(boardCollect_no, title, body, currentDate, loginedMember.localId, 0);
+		boardCollects.add(make_BoardCollect);    //이름이 같은 중복자가 있을경우 구별을 할 수 없으므로 loginedMemberid와 
+		//collet_no를 사용하여 구별을 해준다 이때 BoardCollect_no는 고유의 번호로 1씩 증가하면서 저장 되기에 중복이 될 수 없다
 		
 		System.out.println("게시물이 저장 되었습니다.");
-		collect_no++;
+		boardCollect_no++;
 	}
 	private void update() {
 		System.out.print("수정할 게시물 번호 :");
 		int target_num = Integer.parseInt(sc.nextLine());
 		
 
-		collect collect1 = getCollectByNo(target_num);
+		BoardCollect BoardCollect1 = getBoardCollectByNo(target_num);
 		
-		if(collect1 == null) {
+		if(BoardCollect1 == null) {
 			System.out.println("없는 게시물 번호 입니다.");
 		}
 		else {
@@ -364,11 +373,11 @@ public class Board {
 			System.out.print("새내용 :");
 			String new_body = sc.nextLine();
 			
-			collect1.All_title = new_title;
-			collect1.body = new_body;
+			BoardCollect1.All_title = new_title;
+			BoardCollect1.body = new_body;
 			
 			System.out.println("수정이 왼료 되었습니다.");
-			list(collects);
+			list(boardCollects);
 			
 		}
 	}
@@ -376,36 +385,36 @@ public class Board {
 		System.out.print("삭제할 게시물 번호 : ");
 		int target_num = Integer.parseInt(sc.nextLine());
 		
-		collect collect1 = getCollectByNo(target_num);
+		BoardCollect BoardCollect1 = getBoardCollectByNo(target_num);
 		
-		if(collect1 == null) {
+		if(BoardCollect1 == null) {
 			System.out.println("없는 게시물 번호 입니다.");
 		}
 		else {
-			collects.remove(collect1);
+			boardCollects.remove(BoardCollect1);
 			
 			
 			System.out.println("삭제가 완료 되었습니다.");
-			list(collects); //list를 사용하기 위해서는 내가 보고 싶은 것을 매개변수로 넣어 주어야 한다.
+			list(boardCollects); //list를 사용하기 위해서는 내가 보고 싶은 것을 매개변수로 넣어 주어야 한다.
 		}
 	}
 	
 	
 	
 	
-	public void list(ArrayList<collect> list) {  //list를 더 유동성 있게 사용하기 위해서 매개변수를 통해 사용할 수 있도록 한다
+	public void list(ArrayList<BoardCollect> list) {  //list를 더 유동성 있게 사용하기 위해서 매개변수를 통해 사용할 수 있도록 한다
 		for(int i = 0; i < list.size(); i++) {
-			// == collect make_collect = collects.get(i);
-			collect make_collect = list.get(i);  
+			// == BoardCollect make_BoardCollect = BoardCollects.get(i);
+			BoardCollect make_BoardCollect = list.get(i);  
 			
-			make_collect = (collect)setNickname(make_collect);//모든 게시물의 닉네임을 작성자에게 맞게 세팅
+			make_BoardCollect = (BoardCollect)setNickname(make_BoardCollect);//모든 게시물의 닉네임을 작성자에게 맞게 세팅
 			
-			System.out.println("번호 :" + make_collect.id);
-			System.out.println("제목 : " + make_collect.All_title);
+			System.out.println("번호 :" + make_BoardCollect.id);
+			System.out.println("제목 : " + make_BoardCollect.All_title);
 			//데이터가 추가가 되었으므로 출력할때 역시 추가하여 출력해주어야 한다.
-			System.out.println("작성자 : " + make_collect.nickname);
-			System.out.println("등록날짜 : " + make_collect.regDate);
-			System.out.println("조회수 : " + make_collect.hit);
+			System.out.println("작성자 : " + make_BoardCollect.nickname);
+			System.out.println("등록날짜 : " + make_BoardCollect.regDate);
+			System.out.println("조회수 : " + make_BoardCollect.hit);
 			System.out.println("===========================");
 		}
 	}
@@ -413,33 +422,34 @@ public class Board {
 	
 	//게시물 데이터를 찾을때 index가 아닌 게시물 데이터 그 자체를 찾는 것으로 변경	
 	//회원이름을 게시물에 적용시켜 조립된 상태로 얻기 위함
-	public collect getCollectByNo(int target_num) {
+	public BoardCollect getBoardCollectByNo(int target_num) {
 		
-		collect targetCollect = null;
+		BoardCollect targetBoardCollect = null;
 		//찾고자 하는 게시물 찾기
-		for(int i = 0; i < collects.size(); i++) {
+		for(int i = 0; i < boardCollects.size(); i++) {
 		
-			collect exist_num = collects.get(i);
+			BoardCollect exist_num = boardCollects.get(i);
 			if(target_num == exist_num.id) {
-				targetCollect = exist_num;
+				targetBoardCollect = exist_num;
 				break;
 			}
 	}
 		//닉네임을 세팅하고
-		targetCollect = (collect)setNickname(targetCollect);
+		targetBoardCollect = (BoardCollect)setNickname(targetBoardCollect);
 		//반환
-		return targetCollect;
+		return targetBoardCollect;
 	}	
 	
 	//게시물을 받아 해당 게시물의 작성자 번호에 맞는 작성자 닉네임을 세팅해 주는 메서드
-	private BaseInfo setNickname(BaseInfo info) {
+	private BaseCollect setNickname(BaseCollect baseCollect) {
+	 //둘다 가지고 있는 BaseCollect로 받아준다(boardcollect, replycollect모두 받아줄수 있다)
 		
 		//null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null그대로 반환
-		if(info != null) {
-			Member member = getMemberByMemberNo(info.memberId);
-			info.nickname = member.nickname;
+		if(baseCollect != null) {
+			Member member = getMemberByMemberNo(baseCollect.memberId);
+			baseCollect.nickname = member.nickname;
 		}
-		return info;
+		return baseCollect;
 	}
 	
 	
