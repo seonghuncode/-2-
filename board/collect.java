@@ -1,16 +1,12 @@
 package board;
 
-public class collect {
+public class collect extends BaseInfo {
 
-	int numbers; 
-	String All_title;
-	String All_body; //묶고 싶은 정보를 적어준다
-	//=> 틀과 같은 개념 필요할때 마다 상자를 만들어 담는다. 
 	
-	//데이터가 늘어났다.(원하는 정보가 늘어 났으므로 우선 데이터를 늘려 준다.)
-	String regDate; // ==> 등록날자
-	int memberId;  //게시물을 작성한 회원을 구별하기 위한 용도
-	String nickname; //출력시 회원의 닉네임을 얻어와 저장하기 위한 용도
+	String All_title;
+	
+	
+	
 	int hit; // == 조회수
 	
 	//생성자는 class로 부터 객체를 생성할때 필드값을 초기화 하는 작업을 해준다.
@@ -20,11 +16,11 @@ public class collect {
 	//필드와 동일한 매개변수 사용가능, 이때 this는 필드와 매개변수를 명확히 구분하는 역할(this는 class안에서만 사용 가능)
 
 	//Alt + s + a ==> 단축키
-	public collect(int numbers, String All_title, String All_body, String regDate, int memberId, int hit) {
+	public collect(int id, String All_title, String body, String regDate, int memberId, int hit) {
 		super();
-		this.numbers = numbers;
+		this.id = id;
 		this.All_title = All_title;
-		this.All_body = All_body;
+		this.body = body;
 		this.regDate = regDate;
 		this.memberId = memberId;
 		this.hit = hit;

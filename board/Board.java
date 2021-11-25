@@ -7,7 +7,7 @@ import boardutil.My_util;
 
 public class Board {
 
-	//기존의 댓글 기능에서 댓글을 달고 댓글을 보여주는 기능 구현
+	
 	
 	ArrayList<collect> collects = new ArrayList<>();
 	ArrayList<Member> members = new ArrayList<>();
@@ -189,11 +189,11 @@ public class Board {
 	}
 	
 	private void printCollect(collect collect1) {
-		  System.out.println("====" + collect1.numbers + "번 게시물 ====");
-          System.out.println("번호 :" + collect1.numbers);
+		  System.out.println("====" + collect1.id + "번 게시물 ====");
+          System.out.println("번호 :" + collect1.id);
           System.out.println("제목 :" + collect1.All_title);
           System.out.println("-------------------");
-		  System.out.println("내용 :" + collect1.All_body);
+		  System.out.println("내용 :" + collect1.body);
 		  System.out.println("-------------------");
  		  System.out.println("작성자 :" + collect1.nickname); 
 		  System.out.println("등록날짜:" + collect1.regDate);
@@ -206,10 +206,13 @@ public class Board {
 			  Reply currentReply = replies.get(i);
 			  //collect와 같은 역할을 하게 만든다??(방금 전 코드의)
 			  
-			  //상세보기 할때 다 출력 하는 것이 아니라 댓글 번호라 상세보기 게시물 번호가 같으면 출력해라
-			  if(currentReply.parentId == collect1.numbers) {
-				  
-				  currentReply = setReplyNickname(currentReply);
+			 BaseInfo info = currentReply;
+			 
+			 if(currentReply.parentId == collect1.id) {
+				 //바로 넣을 수 없기 때문에 (Reply)를 적어 형변환을 시켜준다.
+				currentReply = (Reply)setNickname(currentReply); 
+			 
+			  
 				  //setReplyNickname을 거쳐서 오면 닉네임이 셋팅이 되어 나온다
 				  System.out.println("내용 :" + currentReply.body);
 				  System.out.println("작성자 :" + currentReply.nickname); //memberId인데 memberId로 적으면 안되기 때문에
@@ -221,16 +224,7 @@ public class Board {
 		  
 	}
 	
-	private Reply setReplyNickname(Reply reply) {
-		
-		//null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null 그대로 반환
-		if(reply != null) {
-			Member member = getMemberByMemberNo(reply.memberId);
-			reply.nickname = member.nickname;
-		}
-		
-		return reply;
-	}
+	
 	
 	
 	
@@ -271,7 +265,7 @@ public class Board {
 		 String regDate = My_util.getCurrentDate(dateFormat);
 		 
 		 //read하면 상세보기 하겠다는 이야기 이므로 이때 찾은 상세보기 게시물이 번호기 때문에 collect1.numbers를 작성해 준다.
-		 Reply reply = new Reply(replyNo,collect1.numbers, rbody, memberId, regDate);//Reply틀에 reply라는 인스턴스를 만들어서
+		 Reply reply = new Reply(replyNo,collect1.id, rbody, memberId, regDate);//Reply틀에 reply라는 인스턴스를 만들어서
 		 replies.add(reply);			// -> ()안에 원하는 저장 값을 넣어 저장 후  만들어 놓은 배열에 reply를 통체로 저장
 		 
 		System.out.println("댓글이 등록 되었습니다."); 
@@ -371,7 +365,7 @@ public class Board {
 			String new_body = sc.nextLine();
 			
 			collect1.All_title = new_title;
-			collect1.All_body = new_body;
+			collect1.body = new_body;
 			
 			System.out.println("수정이 왼료 되었습니다.");
 			list(collects);
@@ -404,9 +398,9 @@ public class Board {
 			// == collect make_collect = collects.get(i);
 			collect make_collect = list.get(i);  
 			
-			make_collect = setCollectNickname(make_collect);//모든 게시물의 닉네임을 작성자에게 맞게 세팅
+			make_collect = (collect)setNickname(make_collect);//모든 게시물의 닉네임을 작성자에게 맞게 세팅
 			
-			System.out.println("번호 :" + make_collect.numbers);
+			System.out.println("번호 :" + make_collect.id);
 			System.out.println("제목 : " + make_collect.All_title);
 			//데이터가 추가가 되었으므로 출력할때 역시 추가하여 출력해주어야 한다.
 			System.out.println("작성자 : " + make_collect.nickname);
@@ -426,26 +420,26 @@ public class Board {
 		for(int i = 0; i < collects.size(); i++) {
 		
 			collect exist_num = collects.get(i);
-			if(target_num == exist_num.numbers) {
+			if(target_num == exist_num.id) {
 				targetCollect = exist_num;
 				break;
 			}
 	}
 		//닉네임을 세팅하고
-		targetCollect = setCollectNickname(targetCollect);
+		targetCollect = (collect)setNickname(targetCollect);
 		//반환
 		return targetCollect;
 	}	
 	
 	//게시물을 받아 해당 게시물의 작성자 번호에 맞는 작성자 닉네임을 세팅해 주는 메서드
-	private collect setCollectNickname(collect collect1) {
+	private BaseInfo setNickname(BaseInfo info) {
 		
 		//null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null그대로 반환
-		if(collect1 != null) {
-			Member member = getMemberByMemberNo(collect1.memberId);
-			collect1.nickname = member.nickname;
+		if(info != null) {
+			Member member = getMemberByMemberNo(info.memberId);
+			info.nickname = member.nickname;
 		}
-		return collect1;
+		return info;
 	}
 	
 	
