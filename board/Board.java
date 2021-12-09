@@ -134,6 +134,17 @@ public class Board {
 		for(int i = 0; i < members.size(); i++) {
 			Member member = members.get(i);
 			if(member.id.equals(login_id) && member.pw.equals(login_pw)) {
+				
+				//우수회원 일반회원 구별
+				if(member instanceof GeneralMember) {
+					System.out.println("안녕하세요 일반회원" + member.nickname + "님 반갑습니다" );
+					
+				}
+				 else if(member instanceof SpecialMember) {
+						SpecialMember specialMember = (SpecialMember)member;
+						System.out.println("안녕하세요 우수회원" + specialMember.nickname + "님 사랑합니다. 회원님의 잔여 포인트는 " + specialMember.point);
+					}
+				
 				System.out.println(member.nickname + "님 환영 합니다.");
 				loginedMember = member; // ->로그인이 필요한 기능이 나올때 마다 로그인을 해야 하기 때문에 로그아웃을 하기전 까지 유지 되어야 한다.
 				exist_login_id = true;  //로그인이 유지 되기 위해서는 지역변수 보다 상위에 정보가 위치해 있어야 기억할 수 있다.
@@ -148,6 +159,10 @@ public class Board {
 	
 	
 	private void signup() {
+		
+		System.out.print("1. 일반회원, 2. 우수회원 :");
+		int memberFlag = Integer.parseInt(sc.nextLine());
+		
 		System.out.println("==== 회원 가입을 진행합니다 ====");
 		System.out.print("아이디를 입력해주세요 :");
 		String id = sc.nextLine();
@@ -158,8 +173,15 @@ public class Board {
 		System.out.println("닉네임을 입력해주세요 :");
 		String nickname = sc.nextLine();
 		
-		//회원가입하는 멤버에 대한 새로운 class를 만들어 준다.
-		Member member = new Member(memberNo, id, pw, nickname);
+		
+		Member member = null;
+
+		if(memberFlag == 2) {
+			member = new SpecialMember(memberNo, id, pw, nickname, 0);
+		} else {
+			member = new GeneralMember(memberNo, id, pw, nickname);
+		}
+		
 		//add를 해주기 위해 member만 모아두는 ArrayList를 만들어 준다.
 		members.add(member);
 		
@@ -300,8 +322,9 @@ public class Board {
 		boardCollects.add(new BoardCollect(1, "안녕하세요", "내용1입니다", currentDate, 2, 0));
 		boardCollects.add(new BoardCollect(2, "안녕하세요", "내용2입니다", currentDate, 1, 0));
 		boardCollects.add(new BoardCollect(3, "안녕하세요", "내용3입니다", currentDate, 2, 0));
-		members.add(new Member(1, "lee123", "lee1234", "이순신"));
-		members.add(new Member(2, "hong123", "hong1234", "홍길동"));
+		
+		members.add(new GeneralMember(1, "hong123", "h1234", "홍길동"));
+		members.add(new GeneralMember(2, "lee123", "1234", "이순신"));
 		
 		loginedMember = members.get(0);//테스트 데이터인데 일일이 로그인을 하기 번거롭기 때문에 로그인을 시켜 놓는다.
 	}
