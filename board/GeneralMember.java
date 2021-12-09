@@ -10,4 +10,10 @@ public class GeneralMember extends Member {
 		this.pw = pw;
 		this.nickname = nickname;
 	}
+	
+	public void greeting() {
+		System.out.println("안녕하세요 일반회원" + nickname + "님 반갑습니다");
+	}
+	//member에 있는 greeting의 인사법을 general외 special member을 구별하여 다르게 사용하기위해 사용 -> 오버라이딩
+	
 }

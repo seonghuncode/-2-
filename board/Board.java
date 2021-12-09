@@ -136,14 +136,19 @@ public class Board {
 			if(member.id.equals(login_id) && member.pw.equals(login_pw)) {
 				
 				//우수회원 일반회원 구별
-				if(member instanceof GeneralMember) {
-					System.out.println("안녕하세요 일반회원" + member.nickname + "님 반갑습니다" );
-					
-				}
-				 else if(member instanceof SpecialMember) {
-						SpecialMember specialMember = (SpecialMember)member;
-						System.out.println("안녕하세요 우수회원" + specialMember.nickname + "님 사랑합니다. 회원님의 잔여 포인트는 " + specialMember.point);
-					}
+//				if(member instanceof GeneralMember) {
+//					System.out.println("안녕하세요 일반회원" + member.nickname + "님 반갑습니다" );
+//					
+//				}
+//				 else if(member instanceof SpecialMember) {
+//						SpecialMember specialMember = (SpecialMember)member;
+//						System.out.println("안녕하세요 우수회원" + specialMember.nickname + "님 사랑합니다. 회원님의 잔여 포인트는 " + specialMember.point);
+//					}
+				
+				//위의 방법도 가능하나 오버라이딩을 횔용한 방법
+				
+				member.greeting();
+				//greeting은 member에 있으며 상속관계에 있는 generalmember, specialmember모두 사용 가능하다
 				
 				System.out.println(member.nickname + "님 환영 합니다.");
 				loginedMember = member; // ->로그인이 필요한 기능이 나올때 마다 로그인을 해야 하기 때문에 로그아웃을 하기전 까지 유지 되어야 한다.
@@ -324,7 +329,7 @@ public class Board {
 		boardCollects.add(new BoardCollect(3, "안녕하세요", "내용3입니다", currentDate, 2, 0));
 		
 		members.add(new GeneralMember(1, "hong123", "h1234", "홍길동"));
-		members.add(new GeneralMember(2, "lee123", "1234", "이순신"));
+		members.add(new SpecialMember(2, "lee123", "1234", "이순신", 0));
 		
 		loginedMember = members.get(0);//테스트 데이터인데 일일이 로그인을 하기 번거롭기 때문에 로그인을 시켜 놓는다.
 	}
