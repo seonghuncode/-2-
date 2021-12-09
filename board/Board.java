@@ -246,7 +246,7 @@ public class Board {
 		  
 		  if(readCmd == 1) {
 			  System.out.println("[댓글 기능]");
-			  REplyCollect(BoardCollect1);
+			  ReplyCollect(BoardCollect1);
 		  }
 		  else if(readCmd == 2) {
 			  System.out.println("[좋아요 기능]");
@@ -265,7 +265,7 @@ public class Board {
 		  
 	}
 	
-	private void REplyCollect(BoardCollect BoardCollect1) {
+	private void ReplyCollect(BoardCollect BoardCollect1) {
 		//상세보기할 게시물
 		 System.out.print("댓글 내용을 입력해 주세요 :");
 
