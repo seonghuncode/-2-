@@ -289,10 +289,23 @@ public class Board {
 			  //이후에 이 게시물을 이 회원이 어느때 체크했다는 것을 기억하게 해야한다
 			  //변수에 기억을 해야하는데 좋아요가 한두개가 아니므로 arrayList에 저장한다
 			  //--> 우선 받아준후 저장한다
-			  Like like = new Like(boardCollect1.id, loginedMember.localId, My_util.getCurrentDate(dateFormat));
-			  likes.add(like);
-			  System.out.println("해당 게시물을 좋아합니다.");
 			  
+			  //양자 택일 구조를 만들어준다 / 좋아요 체크 / 좋아요 해제
+			  //likes라는  저장소에 저장이 되어 있느냐 안되어 있느냐에 따라 체크 여부가 결정 된다
+			  
+			  //저장소에서 좋아요를 찾아오는 메서드/ 게시물 번호와 회원 번호를 조합하여 좋아요 구별(한게시물에 한개의 좋아요 가능 각 회원별로)
+			 Like like = getLikeByCollectIdAndMemberId(boardCollect1.id, loginedMember.localId);
+			 //이때 메서들 이름을 먼저 만들고 빤갈줄 클릭하여 자동 메서드 생성 
+			 
+			  if(like == null) {
+				  like = new Like(boardCollect1.id, loginedMember.localId, My_util.getCurrentDate(dateFormat));
+				  likes.add(like);
+				  System.out.println("해당 게시물을 좋아합니다.");
+			  }
+			  else{
+				  likes.remove(like); //찾았으면 이미 좋아요를 했다는 뜻이기 때문에 지워준다.
+			  System.out.println("해당 게시물의 좋아요를 해제합니다.");
+			  }
 		  }
 		  else if(readCmd == 3) {
 			  System.out.println("[수정 기능]");
@@ -307,6 +320,22 @@ public class Board {
 		}
 		  
 	}
+	
+	
+	
+	private Like getLikeByCollectIdAndMemberId(int collectId, int memberId) {
+		
+		for(int i = 0; i < likes.size(); i++) {
+			Like like = likes.get(i); 
+			if(like.collectId == collectId && like.memberId == memberId) {
+				return like; //찾았으면 내보내야 한다
+			}
+		}
+		//위의 for문을 다 돌았는데도 없으면 비어있는 null값으로 리턴
+		return null;
+	}
+	
+	
 	
 	private void ReplyCollect(BoardCollect BoardCollect1) {
 		//상세보기할 게시물
