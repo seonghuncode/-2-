@@ -21,6 +21,8 @@ public class Board {
 	ArrayList<BoardCollect> boardCollects = new ArrayList<>();
 	ArrayList<Member> members = new ArrayList<>();
 	ArrayList<ReplyCollect> replies = new ArrayList<>(); //REplyCollect를 저장하는 저장소
+	ArrayList<Like> likes = new ArrayList<>(); //Like를 저장할 배열을 만들어 준다
+	
 	Scanner sc = new Scanner(System.in);
 	String dateFormat = "yyyy.MM.dd"; // 항상 직접 적어주어야 하기에 변수에 넣어 사용한다.
 	int boardCollect_no = 4;  //no가 두개 생겼기 때문에 헷갈리지 않게 이름을 바꾸어 준다
@@ -201,19 +203,19 @@ public class Board {
 	     int target_num = Integer.parseInt(sc.nextLine());
 	     
 	     //int target_real_num = check_list(target_num);
-	     BoardCollect BoardCollect1 = getBoardCollectByNo(target_num);
+	     BoardCollect boardCollect1 = getBoardCollectByNo(target_num);
 	     
-	     if(BoardCollect1 == null) {
+	     if(boardCollect1 == null) {
 	    	 System.out.println("없는 게시물 번호 입니다.");
 	     }
 	     else {
 	    	
-	    	 BoardCollect1.hit ++; //조회수를 1씩 증가 시켜준다.(상세 보기 할 때마다 증가??)
+	    	 boardCollect1.hit ++; //조회수를 1씩 증가 시켜준다.(상세 보기 할 때마다 증가??)
 	    	 
 	    	          //같은 데이터가 다른곳에도 필요로 하기 때문에 따로 만들어 사용한다(중복 최소화)
-	    	 		  printBoardCollect(BoardCollect1);//BoardCollect1이 필요하니까 넘겨준다
+	    	 		  printBoardCollect(boardCollect1);//BoardCollect1이 필요하니까 넘겨준다
 	    	 
-	          		  readProcess(BoardCollect1);
+	          		  readProcess(boardCollect1);
 	          		  
 	          		  
 	          		  
@@ -264,7 +266,7 @@ public class Board {
 	
 	
 	
-	private void readProcess(BoardCollect BoardCollect1) {
+	private void readProcess(BoardCollect boardCollect1) {
 		//상세 보기 메뉴 추가
 		while(true) { //반복문에 기능들을 넣는 이유는 원할때 까지 기능을 사용하도록 하기 위해서 이다.
 		
@@ -273,10 +275,24 @@ public class Board {
 		  
 		  if(readCmd == 1) {
 			  System.out.println("[댓글 기능]");
-			  ReplyCollect(BoardCollect1);
+			  ReplyCollect(boardCollect1);
 		  }
 		  else if(readCmd == 2) {
 			  System.out.println("[좋아요 기능]");
+			  
+			  //1. 어떤 게시물? 게시물 번호?
+			  //2. 누가 체크 했나? 회원 번호
+			  //3. 언제 작성 했는가? 등록 날짜
+			  
+			  //좋아요가 하나 만들어진 상태이다.
+			  //new Like(boardCollect1.id, loginedMember.localId, My_util.getCurrentDate(dateFormat));
+			  //이후에 이 게시물을 이 회원이 어느때 체크했다는 것을 기억하게 해야한다
+			  //변수에 기억을 해야하는데 좋아요가 한두개가 아니므로 arrayList에 저장한다
+			  //--> 우선 받아준후 저장한다
+			  Like like = new Like(boardCollect1.id, loginedMember.localId, My_util.getCurrentDate(dateFormat));
+			  likes.add(like);
+			  System.out.println("해당 게시물을 좋아합니다.");
+			  
 		  }
 		  else if(readCmd == 3) {
 			  System.out.println("[수정 기능]");
