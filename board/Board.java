@@ -236,6 +236,15 @@ public class Board {
  		  System.out.println("작성자 :" + BoardCollect1.nickname); 
 		  System.out.println("등록날짜:" + BoardCollect1.regDate);
 		  System.out.println("조회수 :" + BoardCollect1.hit);
+		  
+		  Like like = getLikeByCollectIdAndMemberId(BoardCollect1.id, loginedMember.localId);
+		  if(like == null) {
+			  System.out.println("좋아요 : ♡" + getLikeCountByCollectId(BoardCollect1.id));
+		  }
+		  else {
+			  System.out.println("좋아요 : ♥" + getLikeCountByCollectId(BoardCollect1.id)); 
+		  }
+		  
 		  System.out.println("===================");
 		  System.out.println("======= 댓글 =======");
 		  //댓글을 보여주기 위해 어디 있는지 찾아야 한다
@@ -262,6 +271,20 @@ public class Board {
 		  
 	}
 	
+	
+	
+	
+	public int getLikeCountByCollectId(int collectId) {
+	//누적 좋아요 하트의 숫자를 계산해주는 메서드	
+		int count = 0;
+		for(int i = 0; i < likes.size(); i++) {
+			Like like = likes.get(i);
+			if(like.collectId == collectId) {
+				count++;
+			}
+		}
+		return count;
+	}
 	
 	
 	
@@ -306,6 +329,9 @@ public class Board {
 				  likes.remove(like); //찾았으면 이미 좋아요를 했다는 뜻이기 때문에 지워준다.
 			  System.out.println("해당 게시물의 좋아요를 해제합니다.");
 			  }
+			  //마지막에 출력을 해줘야 볼 수 있다
+			  printBoardCollect(boardCollect1);
+			  
 		  }
 		  else if(readCmd == 3) {
 			  System.out.println("[수정 기능]");
