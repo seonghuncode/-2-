@@ -118,7 +118,7 @@ public class Board {
 		int type = Integer.parseInt(sc.nextLine());
 		
 		//정렬하기 위해서
-		Collections.sort(boardCollects, new CollectComparator()); //boardCollects는 객체이며 많은 정보들이 있어 정렬 할 수 없다.
+		Collections.sort(boardCollects, new CollectComparator(type, target)); //boardCollects는 객체이며 많은 정보들이 있어 정렬 할 수 없다.
 										//따라소 comparator을 만들어 정렬할 것들을 알려 주어야 한다.
 		//따로 sort기능 없이 바로 정렬로 출력하고 싶을 경우
 		list(boardCollects);
@@ -596,15 +596,44 @@ public class Board {
 } // --> Board class
 
 class CollectComparator implements Comparator<BoardCollect>{
-
+	int type; // 1.오름차순 2. 내림차순
+	int target; //1. 번호 2. 조회수
+	
+	CollectComparator(int type, int target){
+		this.type = type;
+		this.target = target;
+		
+	}
+	
 	@Override
 	public int compare(BoardCollect o1, BoardCollect o2) {
-		//앞 게시물과 뒤의 게시물의 자리를 바꿀것 인가?
-		if(o1.hit > o2.hit) { //큰게 뒤로 가니까 오름 차순
-			return 1;
+		
+		int result = getCompareResult(o1, o2);;
+		
+		if(type == 2) {
+			result *= -1;
 		}
 		
-		return -1;
+
+		return result;
+		
+	}
+	private int getCompareResult(BoardCollect o1, BoardCollect o2) {
+		
+		if(target == 1) { //번호
+			if(o1.id > o2.id) { //큰게 뒤로 가니까 오름 차순
+				return 1;
+			}
+			
+			return -1;
+		}
+		else { //조회수
+			if(o1.hit > o2.hit) { //큰게 뒤로 가니까 오름 차순
+				return 1;
+			}
+			
+			return -1;
+		}
 	}
 	
 }
