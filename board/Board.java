@@ -1,6 +1,8 @@
 package board;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 import boardutil.My_util;
@@ -88,6 +90,9 @@ public class Board {
 				logout();
 			}
 		}
+		else if(cmd.equals("sort")) {
+			sort();
+		}
 			
 			
 			
@@ -102,6 +107,25 @@ public class Board {
 	
 	
 	} // --> run_board문
+	
+	
+	private void sort() {
+		System.out.println("정렬 대상을 선택해 주세요. (1. 번호, 2. 조회수) :");
+		//정렬대상
+		int target = Integer.parseInt(sc.nextLine());
+		System.out.println("정렬 방법을 선택해 주세요. (1. 오름차순, 2. 내림차순) :");
+		//정렬방법
+		int type = Integer.parseInt(sc.nextLine());
+		
+		//정렬하기 위해서
+		Collections.sort(boardCollects, new CollectComparator()); //boardCollects는 객체이며 많은 정보들이 있어 정렬 할 수 없다.
+										//따라소 comparator을 만들어 정렬할 것들을 알려 주어야 한다.
+		//따로 sort기능 없이 바로 정렬로 출력하고 싶을 경우
+		list(boardCollects);
+	}
+	
+	
+	
 	
 	private boolean isLoginCheck() {
 		if(loginedMember == null) {
@@ -395,9 +419,10 @@ public class Board {
 //		BoardCollects.add(new BoardCollect(2, "안녕하세요", "내용2입니다", currentDate, "이순신", 0));
 //		BoardCollects.add(new BoardCollect(3, "안녕하세요", "내용3입니다", currentDate, "홍길동", 0));
 		//writer에서 memberId로 바뀌었으므로 몇번엔지 순번으로 적어준다.
-		boardCollects.add(new BoardCollect(1, "안녕하세요", "내용1입니다", currentDate, 2, 0));
-		boardCollects.add(new BoardCollect(2, "안녕하세요", "내용2입니다", currentDate, 1, 0));
-		boardCollects.add(new BoardCollect(3, "안녕하세요", "내용3입니다", currentDate, 2, 0));
+		boardCollects.add(new BoardCollect(1, "안녕하세요", "내용1입니다", currentDate, 2, 20));
+		boardCollects.add(new BoardCollect(2, "안녕하세요", "내용2입니다", currentDate, 1, 100));
+		boardCollects.add(new BoardCollect(3, "안녕하세요", "내용3입니다", currentDate, 2, 30));
+		//정렬 기능을 확인하기 위해 조회수를 변경해 준다.
 		
 		members.add(new GeneralMember(1, "hong123", "h1234", "홍길동"));
 		members.add(new SpecialMember(2, "lee123", "1234", "이순신", 0));
@@ -569,3 +594,17 @@ public class Board {
 	
 	
 } // --> Board class
+
+class CollectComparator implements Comparator<BoardCollect>{
+
+	@Override
+	public int compare(BoardCollect o1, BoardCollect o2) {
+		//앞 게시물과 뒤의 게시물의 자리를 바꿀것 인가?
+		if(o1.hit > o2.hit) { //큰게 뒤로 가니까 오름 차순
+			return 1;
+		}
+		
+		return -1;
+	}
+	
+}
