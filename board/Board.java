@@ -24,7 +24,7 @@ public class Board {
 	ArrayList<Member> members = new ArrayList<>();
 	ArrayList<ReplyCollect> replies = new ArrayList<>(); //REplyCollect를 저장하는 저장소
 	ArrayList<Like> likes = new ArrayList<>(); //Like를 저장할 배열을 만들어 준다
-	Pagination pagination = new Pagination();
+	Pagination pagination;
 	
 	Scanner sc = new Scanner(System.in);
 	String dateFormat = "yyyy.MM.dd"; // 항상 직접 적어주어야 하기에 변수에 넣어 사용한다.
@@ -35,8 +35,11 @@ public class Board {
 	
 	public Board() {
 		test_data();
-	}  //Board가 main class에서 new 하는 순간 실행이 된다.
-	
+	  //Board가 main class에서 new 하는 순간 실행이 된다.
+		
+		pagination = new Pagination(boardCollects.size());
+		
+	}
 	public void run_board() {
 		
 	//test_data(); ==> test_data는 메인이 아닌 중요하지 않은 코드이므로 메인 코드 위에 사용하는 것은 적절하지 못 하다.
@@ -114,23 +117,53 @@ public class Board {
 	
 	
 	
+	private int inputIntData() {
+		int convertedData = 0;
+		while(true) {
+			try {				
+				convertedData = Integer.parseInt(sc.nextLine());
+				break;
+			} catch(NumberFormatException e) {
+				System.out.println("숫자만 입력해야 합니다.");
+			}				
+		}
+
+		return convertedData;
+	}
+	
+	
+	
+	
+	
+	
 	private void page() {
 		
 		while(true) {
 			System.out.println("페이징 명령어를 입력해 주세요 (1.이전, 2.다음, 3.선택, 4.뒤돌아가기) :");
-			int pageCmd = Integer.parseInt(sc.nextLine());
+			int pageCmd = inputIntData();	
 			
 			if(pageCmd == 2) {
-				pagination.currentPageNo++;
+				if (pagination.currentPageNo >= pagination.getLastPageNo()) {
+					System.out.println("마지막 페이지입니다.");
+				} else {
+					pagination.currentPageNo++;
+				}
 			}
 			else if(pageCmd == 1) {
-				pagination.currentPageNo--;
+				if(pagination.currentPageNo <= 1) {
+					System.out.println("첫번째 페이지입니다.");
+				} else {					
+					pagination.currentPageNo--;
+				}
 			}
 			else if(pageCmd == 4) {
 				break;
 			}
-			list(boardCollects);
+		    else {
+					System.out.println("알 수 없는 명령입니다. 다시 입력해주세요.");
 		}
+			list(boardCollects);
+	}
 	}
 	
 	
@@ -143,10 +176,10 @@ public class Board {
 	private void sort() {
 		System.out.println("정렬 대상을 선택해 주세요. (1. 번호, 2. 조회수) :");
 		//정렬대상
-		int target = Integer.parseInt(sc.nextLine());
+		int target = inputIntData();
 		System.out.println("정렬 방법을 선택해 주세요. (1. 오름차순, 2. 내림차순) :");
 		//정렬방법
-		int type = Integer.parseInt(sc.nextLine());
+		int type = inputIntData();
 		
 		//정렬하기 위해서
 		Collections.sort(boardCollects, new CollectComparator(type, target)); //boardCollects는 객체이며 많은 정보들이 있어 정렬 할 수 없다.
@@ -223,7 +256,7 @@ public class Board {
 	private void signup() {
 		
 		System.out.print("1. 일반회원, 2. 우수회원 :");
-		int memberFlag = Integer.parseInt(sc.nextLine());
+		int memberFlag = inputIntData();
 		
 		System.out.println("==== 회원 가입을 진행합니다 ====");
 		System.out.print("아이디를 입력해주세요 :");
@@ -255,7 +288,7 @@ public class Board {
 	private void read() {
 	//list에서 내용을 보여주지 않기 때문에 상세 read를 하면 상세보기를 할 수 있는 기능이다.
 	     System.out.print("상세 보기 할 게시물 번호를 입력해 주세요 :");
-	     int target_num = Integer.parseInt(sc.nextLine());
+	     int target_num = inputIntData();
 	     
 	     //int target_real_num = check_list(target_num);
 	     BoardCollect boardCollect1 = getBoardCollectByNo(target_num);
@@ -349,7 +382,7 @@ public class Board {
 		while(true) { //반복문에 기능들을 넣는 이유는 원할때 까지 기능을 사용하도록 하기 위해서 이다.
 		
 		System.out.println("상세보기 기능을 선택해주세요(1. 댓글 등록, 2. 좋아요, 3. 수정, 4. 삭제, 5. 목록으로) : ");
-		  int readCmd = Integer.parseInt(sc.nextLine());
+		  int readCmd = inputIntData();
 		  
 		  if(readCmd == 1) {
 			  System.out.println("[댓글 기능]");
@@ -455,7 +488,7 @@ public class Board {
 		boardCollects.add(new BoardCollect(3, "안녕하세요", "내용3입니다", currentDate, 2, 30));
 		//정렬 기능을 확인하기 위해 조회수를 변경해 준다.
 		
-		for(int i = 4; i <=30; i++) {
+		for(int i = 4; i <=23; i++) {
 			boardCollects.add(new BoardCollect(i, "제목" + i, "내용" + i, currentDate, 1, 30));
 			
 		}
@@ -517,7 +550,7 @@ public class Board {
 	}
 	private void update() {
 		System.out.print("수정할 게시물 번호 :");
-		int target_num = Integer.parseInt(sc.nextLine());
+		int target_num = inputIntData();
 		
 
 		BoardCollect BoardCollect1 = getBoardCollectByNo(target_num);
@@ -543,7 +576,7 @@ public class Board {
 	}
 	private void delete() {
 		System.out.print("삭제할 게시물 번호 : ");
-		int target_num = Integer.parseInt(sc.nextLine());
+		int target_num = inputIntData();
 		
 		BoardCollect BoardCollect1 = getBoardCollectByNo(target_num);
 		
@@ -577,6 +610,10 @@ public class Board {
 			System.out.println("조회수 : " + make_BoardCollect.hit);
 			System.out.println("===========================");
 		}
+		
+		System.out.println("s : " + pagination.getStartPageNoInBlock());
+		System.out.println("e : " + pagination.getEndPageNoInBlock());
+		
 		// 페이지 숫자
 		for (int i = pagination.getStartPageNoInBlock(); i <= pagination.getEndPageNoInBlock(); i++) {
 			if (i == pagination.currentPageNo) {
