@@ -24,6 +24,7 @@ public class Board {
 	ArrayList<Member> members = new ArrayList<>();
 	ArrayList<ReplyCollect> replies = new ArrayList<>(); //REplyCollect를 저장하는 저장소
 	ArrayList<Like> likes = new ArrayList<>(); //Like를 저장할 배열을 만들어 준다
+	Pagination pagination = new Pagination();
 	
 	Scanner sc = new Scanner(System.in);
 	String dateFormat = "yyyy.MM.dd"; // 항상 직접 적어주어야 하기에 변수에 넣어 사용한다.
@@ -94,7 +95,7 @@ public class Board {
 			sort();
 		}
 		else if(cmd.equals("page")) {
-			
+			page();
 		}
 			
 			
@@ -110,6 +111,33 @@ public class Board {
 	
 	
 	} // --> run_board문
+	
+	
+	
+	private void page() {
+		
+		while(true) {
+			System.out.println("페이징 명령어를 입력해 주세요 (1.이전, 2.다음, 3.선택, 4.뒤돌아가기) :");
+			int pageCmd = Integer.parseInt(sc.nextLine());
+			
+			if(pageCmd == 2) {
+				pagination.currentPageNo++;
+			}
+			else if(pageCmd == 1) {
+				pagination.currentPageNo--;
+			}
+			else if(pageCmd == 4) {
+				break;
+			}
+			list(boardCollects);
+		}
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 	private void sort() {
@@ -427,6 +455,11 @@ public class Board {
 		boardCollects.add(new BoardCollect(3, "안녕하세요", "내용3입니다", currentDate, 2, 30));
 		//정렬 기능을 확인하기 위해 조회수를 변경해 준다.
 		
+		for(int i = 4; i <=30; i++) {
+			boardCollects.add(new BoardCollect(i, "제목" + i, "내용" + i, currentDate, 1, 30));
+			
+		}
+		
 		members.add(new GeneralMember(1, "hong123", "h1234", "홍길동"));
 		members.add(new SpecialMember(2, "lee123", "1234", "이순신", 0));
 		
@@ -530,7 +563,7 @@ public class Board {
 	
 	
 	public void list(ArrayList<BoardCollect> list) {  //list를 더 유동성 있게 사용하기 위해서 매개변수를 통해 사용할 수 있도록 한다
-		for(int i = 0; i < list.size(); i++) {
+		for(int i = pagination.getStartIdx(); i < pagination.getEndIdx(); i++) {
 			// == BoardCollect make_BoardCollect = BoardCollects.get(i);
 			BoardCollect make_BoardCollect = list.get(i);  
 			
@@ -544,6 +577,15 @@ public class Board {
 			System.out.println("조회수 : " + make_BoardCollect.hit);
 			System.out.println("===========================");
 		}
+		// 페이지 숫자
+		for (int i = pagination.getStartPageNoInBlock(); i <= pagination.getEndPageNoInBlock(); i++) {
+			if (i == pagination.currentPageNo) {
+				System.out.print("[" + i + "] ");
+			} else {
+				System.out.print(i + " ");
+			}
+		}
+		System.out.println();
 	}
 	
 	
