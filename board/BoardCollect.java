@@ -2,12 +2,12 @@ package board;
 
 public class BoardCollect extends BaseCollect {
 
+	//public을 해주는 이유 -> FileManager에서 사용하기 위해서
+	public String All_title;
 	
-	String All_title;
 	
 	
-	
-	int hit; // == 조회수
+	public int hit; // == 조회수
 	
 	//생성자는 class로 부터 객체를 생성할때 필드값을 초기화 하는 작업을 해준다.
 	//생성자 == 객체의 생성과 동시에 자동으로 호출되는 메서드
