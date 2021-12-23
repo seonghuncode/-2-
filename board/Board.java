@@ -39,6 +39,8 @@ public class Board {
 		test_data();
 	  //Board가 main class에서 new 하는 순간 실행이 된다.
 		
+		boardCollects = fileManager.getAllCollects();
+		
 		pagination = new Pagination(boardCollects.size());
 		
 	}
@@ -293,7 +295,7 @@ public class Board {
 	     int target_num = inputIntData();
 	     
 	     //int target_real_num = check_list(target_num);
-	     BoardCollect boardCollect1 = getBoardCollectByNo(target_num);
+	     BoardCollect boardCollect1 = fileManager.loadCollectFromFile(target_num);
 	     
 	     if(boardCollect1 == null) {
 	    	 System.out.println("없는 게시물 번호 입니다.");
@@ -555,7 +557,7 @@ public class Board {
 		int target_num = inputIntData();
 		
 
-		BoardCollect BoardCollect1 = getBoardCollectByNo(target_num);
+		BoardCollect BoardCollect1 = fileManager.loadCollectFromFile(target_num);
 		
 		if(BoardCollect1 == null) {
 			System.out.println("없는 게시물 번호 입니다.");
@@ -580,7 +582,7 @@ public class Board {
 		System.out.print("삭제할 게시물 번호 : ");
 		int target_num = inputIntData();
 		
-		BoardCollect BoardCollect1 = getBoardCollectByNo(target_num);
+		BoardCollect BoardCollect1 = fileManager.loadCollectFromFile(target_num);
 		
 		if(BoardCollect1 == null) {
 			System.out.println("없는 게시물 번호 입니다.");

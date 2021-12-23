@@ -1,10 +1,12 @@
 package boardutil;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import board.BoardCollect;
 
@@ -13,31 +15,31 @@ public class FileManager {
 	//쓰는것 따로 읽는 것 따로 관리 해준다.
 	
 	
-	public BoardCollect loadCollectFromFile(int id) {
-
+	public BoardCollect loadCollectFromFile(String file) {
+		
+		String path = "c:/test/article/" + file;
 		BoardCollect collect = null;
 
 		try {
-			String file = "c:/test/article/article_" + id + ".txt";
-			FileReader reader = new FileReader(file); 
-			BufferedReader br = new BufferedReader(reader); 
-			String line = br.readLine(); 
+			FileReader reader = new FileReader(path);
+			BufferedReader br = new BufferedReader(reader);
+			String line = br.readLine();
 
-			while(br.readLine() != null) { 
+			while (br.readLine() != null) {
 				System.out.println(line);
-				line += br.readLine();
-			}		
-
-			br.close(); 
-			reader.close();			
+			}
+			
+			br.close();
+			reader.close();
+			
 			collect = getBoardCollectFromString(line);
 
 
-		} catch (FileNotFoundException e) { 
+		}   catch (FileNotFoundException e) {
 			System.out.println("파일이 없습니다.");
 			e.printStackTrace();
 
-		} catch(IOException e) {
+		}   catch (IOException e) {
 			System.out.println("파일을 읽어오는 중 문제가 발생했습니다.");
 			e.printStackTrace();
 
@@ -45,6 +47,13 @@ public class FileManager {
 		return collect;
 	}
 	
+	
+	public BoardCollect loadArticleFromFile(int id) {
+		String file = "article_" + id + ".txt";
+		BoardCollect article = loadCollectFromFile(file);
+
+		return article;
+	}
 	
 	
 	public void saveCollectToFile(BoardCollect collect) {
@@ -65,9 +74,9 @@ public class FileManager {
 			//조회수
 			writer.write("hit:" + collect.hit);
 			
-			writer.close(); 
-		}
-		catch(IOException e) {
+			writer.close();
+
+		} catch (IOException e) {
 			System.out.println("파일 쓰지 중 문제가 발생하였습니다.");
 			//-> 이 코드가 실행되면 예외적 상황이 발생하여 여기로 빠졌다. == 문제가 발생했다.
 			e.printStackTrace(); // -> 문제가 발생했을때 어디서 생긴 문제인지 잘 모를 경우 사용하면 뭐때문에 문제가 생겼는지 알려준다.
@@ -100,6 +109,20 @@ public class FileManager {
 		}
 
 		return collect;
+	}
+	
+	public ArrayList<BoardCollect> getAllArticles() {
+		ArrayList<BoardCollect> collects = new ArrayList<>();
+		File collectFolder = new File("c:/test/article");
+		String[] articleFilenames = collectFolder.list();
+
+		for(int i = 0; i < articleFilenames.length; i++) {
+			String filename = articleFilenames[i];
+			BoardCollect collect = loadCollectFromFile(filename);
+			collects.add(collect);
+		}
+
+		return collects;
 	}
 	
 	
