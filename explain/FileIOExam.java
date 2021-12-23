@@ -38,11 +38,24 @@ public class FileIOExam {
 			//int result = reader.read();// -> 숫자로 읽어와서 불편하다
 			//System.out.println("읽어온 문자 :" + result);
 			
+			/*
 			BufferedReader br = new BufferedReader(reader);//숫자가 아닌 문자로 읽어 오기 위해서 사용해준다.
 			String line = br.readLine();
 			System.out.println(line); // -> 한줄씩 읽어 온다.
 			line = br.readLine();
 			System.out.println(line); //두번째 줄을 읽어 온다.
+			*/
+			
+			BufferedReader br = new BufferedReader(reader);//숫자가 아닌 문자로 읽어 오기 위해서 사용해준다.
+			String line = br.readLine();
+			
+			while(line != null) {
+				System.out.println(line);
+				line = br.readLine();
+			}
+			
+			br.close();
+			reader.close();
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
