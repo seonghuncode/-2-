@@ -9,6 +9,8 @@ public class BoardCollect extends BaseCollect {
 	
 	public int hit; // == 조회수
 	
+	public BoardCollect() {}
+	
 	//생성자는 class로 부터 객체를 생성할때 필드값을 초기화 하는 작업을 해준다.
 	//생성자 == 객체의 생성과 동시에 자동으로 호출되는 메서드
 	//생성자의 이름은 class의 이름과 같아야 한다.

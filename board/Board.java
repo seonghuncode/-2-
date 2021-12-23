@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 
+import boardutil.FileManager;
 import boardutil.My_util;
 
 public class Board {
@@ -24,6 +25,7 @@ public class Board {
 	ArrayList<Member> members = new ArrayList<>();
 	ArrayList<ReplyCollect> replies = new ArrayList<>(); //REplyCollect를 저장하는 저장소
 	ArrayList<Like> likes = new ArrayList<>(); //Like를 저장할 배열을 만들어 준다
+	FileManager fileManager = new FileManager();
 	Pagination pagination;
 	
 	Scanner sc = new Scanner(System.in);
@@ -479,18 +481,18 @@ public class Board {
 		//Main class에 3개의 데이터가 추가 되었으므로 작성일, 작성자, 조회수 순으로 데이터를 추가햇 넣어 준다.
 		//My_util에서 getCurrnetDate(yyyy.MM.dd)의 형태로 오늘 날짜를 출력해 줘라
 		String currentDate = My_util.getCurrentDate(dateFormat); //같은 긴 코드가 중복되기 때문에 변수로 만들어 관리해준다.
-//		BoardCollects.add(new BoardCollect(1, "안녕하세요", "내용1입니다", currentDate, "홍길동", 0));
-//		BoardCollects.add(new BoardCollect(2, "안녕하세요", "내용2입니다", currentDate, "이순신", 0));
-//		BoardCollects.add(new BoardCollect(3, "안녕하세요", "내용3입니다", currentDate, "홍길동", 0));
-		//writer에서 memberId로 바뀌었으므로 몇번엔지 순번으로 적어준다.
-		boardCollects.add(new BoardCollect(1, "안녕하세요", "내용1입니다", currentDate, 2, 20));
-		boardCollects.add(new BoardCollect(2, "안녕하세요", "내용2입니다", currentDate, 1, 100));
-		boardCollects.add(new BoardCollect(3, "안녕하세요", "내용3입니다", currentDate, 2, 30));
-		//정렬 기능을 확인하기 위해 조회수를 변경해 준다.
+
+		BoardCollect collect1 = new BoardCollect(1, "안녕하세요", "내용1입니다", currentDate, 2, 20);
+		BoardCollect collect2 = new BoardCollect(2, "안녕하세요", "내용2입니다", currentDate, 1, 100);
+		BoardCollect collect3 = new BoardCollect(3, "안녕하세요", "내용3입니다", currentDate, 2, 30);
+		
+		fileManager.saveCollectToFile(collect1);
+		fileManager.saveCollectToFile(collect2);
+		fileManager.saveCollectToFile(collect3);
 		
 		for(int i = 4; i <=23; i++) {
-			boardCollects.add(new BoardCollect(i, "제목" + i, "내용" + i, currentDate, 1, 30));
-			
+			BoardCollect collectTmp = new BoardCollect(i, "제목" + i, "내용" + i, currentDate, 1, 30);
+			fileManager.saveCollectToFile(collectTmp);
 		}
 		
 		members.add(new GeneralMember(1, "hong123", "h1234", "홍길동"));
